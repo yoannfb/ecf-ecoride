@@ -1,3 +1,11 @@
+<style>
+  main {
+    background-color: #F7F6CF !important;
+    font-family: EB Garamond !important;
+    font-size:1.2rem;
+  }
+
+</style>
 <?php
 include("includes/header.php");
 include("includes/navbar.php");
@@ -17,7 +25,7 @@ foreach ($covoiturages as $item) {
 }
 ?>
 
-<main class="container my-5">
+<main class="py-5">
   <?php if (!$trajet): ?>
     <div class="alert alert-danger">
       Le covoiturage demandé est introuvable.
@@ -25,12 +33,12 @@ foreach ($covoiturages as $item) {
   <?php else: ?>
     <h2>Détail du trajet avec <?= htmlspecialchars($trajet['chauffeur']) ?> 🚗</h2>
 
-    <div class="row mt-4">
+    <div class="d-flex mt-4">
       <div class="col-md-4">
         <img src="<?= htmlspecialchars($trajet['photo']) ?>" class="img-fluid rounded shadow" alt="Photo du chauffeur">
         <p class="mt-3"><strong>Note :</strong> <?= htmlspecialchars($trajet['note']) ?> ⭐</p>
       </div>
-      <div class="col-md-8">
+      <div class="d-flex flex-column ms-5">
         <ul class="list-group mb-3">
           <li class="list-group-item"><strong>Départ :</strong> <?= htmlspecialchars($trajet['depart']) ?> à <?= htmlspecialchars($trajet['heure_depart']) ?></li>
           <li class="list-group-item"><strong>Arrivée :</strong> <?= htmlspecialchars($trajet['arrivee']) ?> à <?= htmlspecialchars($trajet['heure_arrivee']) ?></li>
@@ -53,7 +61,7 @@ foreach ($covoiturages as $item) {
     <?php if (!isset($_SESSION['user'])): ?>
         <div class="text-center mt-4">
             <p>Vous devez être connecté pour participer à ce covoiturage.</p>
-            <a href="connexion.php?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="btn btn-warning">Se connecter</a>
+            <a href="connexion.php?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="btn btn-success">Se connecter</a>
         </div>
     <?php else: ?>
         <form action="participer.php" method="POST" class="text-center mt-4">
