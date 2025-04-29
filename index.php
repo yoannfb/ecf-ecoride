@@ -51,5 +51,6 @@
 
   <?php include("includes/footer.php"); ?>
   
+  <script src="js/index.js"></script>
 </body>
 </html>

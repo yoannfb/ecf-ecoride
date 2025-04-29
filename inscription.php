@@ -1,10 +1,15 @@
+<style> 
+
+
+</style>
+
 <?php
 session_start();
 require_once 'includes/header.php';
 require_once 'includes/navbar.php';
 ?>
 
-<div class="container mt-5" style="max-width: 450px;">
+<div class="colornav d-flex flex-column align-items-center text-center pt-5">
     <h2 class="text-center mb-4">Créer un compte</h2>
 
     <?php if (isset($_GET['error'])): ?>
@@ -40,7 +45,7 @@ require_once 'includes/navbar.php';
             <input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100">S'inscrire</button>
+        <button type="submit" class="btn btn-success w-100">S'inscrire</button>
     </form>
 
     <p class="text-center mt-3">
@@ -49,3 +54,4 @@ require_once 'includes/navbar.php';
 </div>
 
 <?php require_once 'includes/footer.php'; ?>
+
