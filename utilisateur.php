@@ -1,3 +1,18 @@
+<style>
+    .back {
+        width: 100%;
+        height: 100%;
+        background-image: url("assets/espace utilisateur.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        border-radius: 50%;
+        background-color: #F7F6CF;
+    }
+    
+</style>
+
+
 <?php
 session_start();
 require_once 'includes/header.php';
@@ -20,7 +35,7 @@ try {
 }
 ?>
 
-<div class="container mt-5">
+<div class="back d-flex flex-column text-center align-items-center pt-5">
     <h2 class="mb-4">Bienvenue, <?= htmlspecialchars($user['pseudo']) ?> 👋</h2>
 
     <ul class="list-group">
@@ -28,8 +43,8 @@ try {
         <li class="list-group-item"><strong>Crédits disponibles :</strong> <?= $user['credits'] ?></li>
     </ul>
 
-    <div class="mt-4">
-        <a href="logout.php" class="btn btn-outline-danger">Se déconnecter</a>
+    <div class="py-5">
+        <a href="logout.php" class="btn btn-success">Se déconnecter</a>
     </div>
 </div>
 
