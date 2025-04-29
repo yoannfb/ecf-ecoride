@@ -9,6 +9,7 @@
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="css/covoiturages.css">
+  <link rel="stylesheet" href="css/connexion.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
   <script defer src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
