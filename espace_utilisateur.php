@@ -1,3 +1,70 @@
+<style>
+    .user {
+        background-color: #F7F6CF;
+        font-family: EB Garamond;
+    }
+    .container {
+        max-width: 1600px;
+        margin: 0 auto ;
+        padding: 0 20px 0;
+    }
+    h1 {
+        text-transform: uppercase;
+        color: black;
+        font-weight: 900;
+        color: transparent;
+        font-size: 0px;
+    }
+    h1 span {
+        display: inline-block;
+        position: relative;
+        overflow: hidden;
+        font-size: clamp(20px, 8vw, 60px);
+        border-radius: 30px;
+    }
+    h1 span::after {
+        content:"";
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        transform: translateX(-100%);
+        background: rgba(40, 167, 69, 1);
+    }
+    h1:nth-child(1) {
+        font-weight: 300;
+        animation: txt-appearance 0s 1s
+        forwards;
+    }
+    h1:nth-child(1) span::after {
+        background: rgba(40, 167, 69, 1);
+        animation: slide-in 0.75s ease-out forwards,
+        slide-out 0.75s 1s ease-out forwards;
+    }
+    @keyframes slide-in {
+        100% {
+            transform: translateX(0%);
+        }
+    }
+    @keyframes slide-out {
+        100% {
+            transform: translateX(100%);
+        }
+    }
+    @keyframes txt-appearance {
+        100% {
+            color: black;
+        }
+    }
+
+    .info {
+        background: rgba(40, 167, 69, 1)!important;
+        color: white!important;
+    }
+</style>
+
 <?php
 session_start();
 require_once 'includes/header.php';
@@ -50,12 +117,19 @@ $vehicules = $stmt2->fetchAll();
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
     </div>
 <?php endif; ?>
-<div class="container mt-5">
-    <h1 class="mb-4">Espace utilisateur</h1>
+<div class="user p-5">
+    <div class="container">
+        <h1>
+            <span>
+                Espace utilisateur
+            </span>
+        </h1>
+    </div>
+    
 
     <!-- Infos utilisateur -->
     <div class="card mb-4">
-        <div class="card-header bg-success text-white">
+        <div class="card-header info">
             Mes informations
         </div>
         <div class="card-body">
@@ -64,7 +138,7 @@ $vehicules = $stmt2->fetchAll();
             <p><strong>Rôle :</strong> <?= htmlspecialchars($user['role']) ?></p>
             <p><strong>Crédits :</strong> <?= $user['credits'] ?> crédits</p>
         </div>
-        <div class="card mb-4">
+        <div class="card">
             <div class="card-header bg-secondary text-white">
                 Modifier ma photo de profil
             </div>
@@ -77,7 +151,7 @@ $vehicules = $stmt2->fetchAll();
                 <div class="mb-3">
                     <input type="file" name="photo" class="form-control" accept="image/*" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                <button type="submit" class="btn btn-secondary">Mettre à jour</button>
                 </form>
             </div>
         </div>
@@ -85,7 +159,7 @@ $vehicules = $stmt2->fetchAll();
 
     <!-- Véhicules enregistrés -->
     <div class="card">
-        <div class="card-header bg-info text-white">
+        <div class="card-header bg-warning text-dark">
             Mes véhicules enregistrés
         </div>
         <div class="card-body">
@@ -104,7 +178,7 @@ $vehicules = $stmt2->fetchAll();
                                     <li><strong>Animaux :</strong> <?= $v['animaux'] ? 'Oui' : 'Non' ?></li>
                                     <li><strong>Préférences :</strong> <?= nl2br(htmlspecialchars($v['preferences_perso'])) ?></li>
                                 </ul>
-                                <a href="modifier_vehicule.php?id=<?= $v['id'] ?>" class="btn btn-sm btn-outline-primary mt-2">Modifier</a>
+                                <a href="modifier_vehicule.php?id=<?= $v['id'] ?>" class="btn btn-sm btn-warning mt-2">Modifier</a>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -132,7 +206,7 @@ $vehicules = $stmt2->fetchAll();
                         <?= $trajet['date_depart'] ?> — <?= $trajet['prix'] ?> €
                     </div>
                     <div>
-                        <a href="modifier_trajet.php?id=<?= $trajet['id'] ?>" class="btn btn-sm btn-outline-primary">Modifier</a>
+                        <a href="modifier_trajet.php?id=<?= $trajet['id'] ?>" class="btn btn-sm btn-warning">Modifier</a>
                         <form action="supprimer_trajet.php" method="POST" class="d-inline" onsubmit="return confirm('Supprimer ce trajet ?');">
                             <input type="hidden" name="trajet_id" value="<?= $trajet['id'] ?>">
                             <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
@@ -147,12 +221,12 @@ $vehicules = $stmt2->fetchAll();
 
 
     <!-- Boutons utiles -->
-    <div class="mt-4">
+    <div class="mt-4 p-2">
         <?php if (in_array($user['role'], ['chauffeur', 'les-deux'])): ?>
         <a href="saisir_trajet.php" class="btn btn-success">Créer un trajet</a>
         <?php endif; ?>
-        <a href="utilisateur.php" class="btn btn-outline-secondary">Modifier mon rôle / véhicule</a>
-        <a href="index.php" class="btn btn-outline-primary">Retour à l'accueil</a>
+        <a href="utilisateur.php" class="btn btn-warning">Modifier mon rôle / véhicule</a>
+        <a href="index.php" class="btn btn-outline-secondary">Retour à l'accueil</a>
         <a href="logout.php" class="btn btn-danger">Se déconnecter</a>
     </div>
 </div>
