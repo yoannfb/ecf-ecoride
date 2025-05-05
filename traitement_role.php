@@ -25,12 +25,13 @@ if ($role === 'chauffeur' || $role === 'les-deux') {
     $places = $_POST['places'] ?? 0;
     $fumeur = isset($_POST['fumeur']) ? 1 : 0;
     $animaux = isset($_POST['animaux']) ? 1 : 0;
+    $eco = isset($_POST['eco']) ? 1 : 0;
     $preferences_perso = $_POST['preferences_perso'] ?? '';
 
     // Insère les données véhicule dans la base
     $insert = $pdo->prepare("INSERT INTO vehicules 
-        (utilisateur_id, plaque, date_immat, modele, marque, couleur, places, fumeur, animaux, preferences_perso)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        (utilisateur_id, plaque, date_immat, modele, marque, couleur, places, fumeur, animaux, preferences_perso, eco)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     $insert->execute([
         $user_id,
@@ -42,7 +43,8 @@ if ($role === 'chauffeur' || $role === 'les-deux') {
         $places,
         $fumeur,
         $animaux,
-        $preferences_perso
+        $preferences_perso,
+        $eco,
     ]);
 }
 

@@ -57,6 +57,7 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: connexion.php?error=Veuillez vous connecter pour accéder à cette page.");
     exit;
 }
+$user_id = $_SESSION['user_id'];
 
 // Récupération des infos utilisateur depuis la base
 try {
@@ -123,16 +124,20 @@ try {
                             <input type="text" name="marque" class="form-control">
                         </div>
                     </div>
-                    <div class="d-flex flex-column"> 
-                        <div class="mb-3 mx-3">
+                    <div class="d-flex"> 
+                        <div class="mb-3 d-flex flex-wrap">
                             <!--<label>Préférences</label><br>-->
-                            <div class="form-check col-lg-1 col-md-1 col-sm-1">
+                            <div class="form-check col-lg-1 col-md-1 col-sm-1 mx-5">
                                 <input class="form-check-input" type="checkbox" name="fumeur" value="1" id="fumeur">
                                 <label class="form-check-label" for="fumeur">Accepte fumeurs</label>
                             </div>
-                            <div class="form-check col-lg-1 col-md-1 col-sm-1">
+                            <div class="form-check col-lg-1 col-md-1 col-sm-1 mx-5">
                                 <input class="form-check-input" type="checkbox" name="animaux" value="1" id="animaux">
                                 <label class="form-check-label" for="animaux">Accepte animaux</label>
+                            </div>
+                            <div class="form-check col-lg-1 col-md-1 col-sm-1 mx-5">
+                                <input class="form-check-input" type="checkbox" name="eco" id="eco" value="1">
+                                <label class="form-check-label" for="eco">Véhicule électrique (mode éco)</label>
                             </div>
                             <textarea name="preferences_perso" class="form-control mt-2" placeholder="Autres préférences"></textarea>
                         </div>
@@ -144,9 +149,7 @@ try {
             <button type="submit" class="btn btn-success mt-3">Enregistrer</button>
         </form>
     </div>
-    
 
-    
 </div>
 
 <script>

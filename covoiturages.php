@@ -7,11 +7,40 @@
 <?php
 include("includes/header.php");
 include("includes/navbar.php");
-include("includes/mock.php"); // Données simulées
+//include("includes/mock.php"); // Données simulées//
 require_once 'includes/db.php';
 
+// Requête pour récupérer les trajets à venir depuis la BDD
+$stmt = $pdo->query("
+    SELECT 
+        t.id,
+        t.adresse_depart AS depart,
+        t.adresse_arrivee AS arrivee,
+        DATE(t.date_depart) AS date,
+        TIME(t.date_depart) AS heure_depart,
+        TIME(t.date_arrivee) AS heure_arrivee,
+        t.prix,
+        u.pseudo AS chauffeur,
+        u.photo,
+        v.marque,
+        v.modele,
+        v.couleur,
+        v.places,
+        v.preferences_perso,
+        5 AS note,
+        v.eco,
+        CONCAT(v.marque, ' ', v.modele) AS vehicule
+    FROM trajets t
+    JOIN utilisateurs u ON t.conducteur_id = u.id
+    JOIN vehicules v ON t.vehicule_id = v.id
+    WHERE t.statut = 'à venir'
+    ORDER BY t.date_depart ASC
+");
 
-// Récupération des filtres depuis l'URL
+$covoiturages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+/* Récupération des filtres depuis l'URL*/
 $depart = $_POST["depart"] ?? '';
 $arrivee = $_POST['arrivee'] ?? '';
 $date = $_POST['date'] ?? '';
@@ -76,32 +105,37 @@ $filtre_prix = $_POST['prix'] ?? '';
     } else {
       foreach ($resultats as $trajet) {
         ?>
-        <div class="col-md-6 mb-4 px-4">
-          <div class="card shadow-sm">
-            <div class="row g-0">
-              <div class="col-md-4">
-                <img src="<?= htmlspecialchars($trajet['photo']) ?>" class="img-fluid rounded-start" alt="<?= htmlspecialchars($trajet['chauffeur']) ?>">
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h5 class="card-title"><?= htmlspecialchars($trajet['chauffeur']) ?> (<?= htmlspecialchars($trajet['note']) ?> ⭐)</h5>
-                  <p class="card-text">
-                    <strong><?= htmlspecialchars($trajet['depart']) ?> → <?= htmlspecialchars($trajet['arrivee']) ?></strong><br>
-                    Départ : <?= htmlspecialchars($trajet['heure_depart']) ?> | Arrivée : <?= htmlspecialchars($trajet['heure_arrivee']) ?><br>
-                    Véhicule : <?= htmlspecialchars($trajet['vehicule']) ?><br>
-                    <?= $trajet['eco'] ? '<span class="badge bg-success">Éco</span>' : '' ?>
-                  </p>
-                  <p class="card-text">
-                    <span class="text-success fw-bold"><?= htmlspecialchars($trajet['prix']) ?> €</span> – <?= htmlspecialchars($trajet['places']) ?> place(s) dispo
-                  </p>
-                  <a href="detail.php?id=<?= urlencode($trajet['id']) ?>" class="btn btn-outline-success btn-sm">Voir le détail</a>
+          <div class="col-md-6 mb-4 px-4">
+            <div class="card shadow-sm">
+              <div class="row g-0">
+                <div class="col-md-4">
+                  <img src="uploads/<?= htmlspecialchars($trajet['photo']) ?>" class="img-fluid rounded-start" alt="<?= htmlspecialchars($trajet['chauffeur']) ?>">
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title"><?= htmlspecialchars($trajet['chauffeur']) ?> (<?= htmlspecialchars($trajet['note']) ?> ⭐)</h5>
+                    <p class="card-text">
+                      <strong><?= htmlspecialchars($trajet['depart']) ?> → <?= htmlspecialchars($trajet['arrivee']) ?></strong><br>
+                      Départ : <?= htmlspecialchars($trajet['heure_depart']) ?> | Arrivée : <?= htmlspecialchars($trajet['heure_arrivee']) ?><br>
+                      Véhicule : <?= htmlspecialchars($trajet['vehicule']) ?><br>
+                      <p>Valeur eco brute : <?= var_export($trajet['eco'], true) ?></p>
+
+                      <?php if (!empty($trajet['eco'])): ?>
+                        <span class="badge bg-success">Éco</span>
+                      <?php endif; ?>
+                    </p>
+                    <p class="card-text">
+                      <span class="text-success fw-bold"><?= htmlspecialchars($trajet['prix']) ?> €</span> – <?= htmlspecialchars($trajet['places']) ?> place(s) dispo
+                    </p>
+                    <a href="detail.php?id=<?= urlencode($trajet['id']) ?>" class="btn btn-outline-success btn-sm">Voir le détail</a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
         <?php
-      }
+        }
+        
     }
     ?>
   </div>

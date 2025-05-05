@@ -22,7 +22,7 @@ try {
         $_SESSION['pseudo'] = $user['pseudo'];
         $_SESSION['email'] = $user['email'];
 
-        header("Location: utilisateur.php"); // à adapter selon ta page utilisateur
+        header("Location: espace_utilisateur.php"); // à adapter selon ta page utilisateur
         exit;
     } else {
         header("Location: connexion.php?error=Email ou mot de passe incorrect");
