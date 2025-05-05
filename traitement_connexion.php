@@ -2,6 +2,8 @@
 session_start();
 require_once 'includes/db.php';
 
+
+
 if (!isset($_POST['email'], $_POST['password'])) {
     header("Location: connexion.php?error=Champs manquants");
     exit;
