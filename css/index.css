@@ -5,8 +5,8 @@
     height: 200px;
     overflow: hidden;
     background-color:white;
-  }
-  
+}
+
 .slider-img-loop {
     position: absolute;
     top: 50%;
@@ -15,21 +15,21 @@
     width: 10%;
     animation: glisseInfini 8s linear infinite;
 }
-  
+
 @keyframes glisseInfini {
     0% { left: -200px; }
     100% { left: calc(100% + 200px); }
 }
-  
+
   /* Délais différents pour créer un effet naturel */
 .delay-0 {
     animation-delay: 0s;
 }
-  
+
 .delay-1 {
     animation-delay: 2.5s;
 }
-  
+
 .delay-2 {
     animation-delay: 5s;
 }

@@ -31,10 +31,10 @@ foreach ($covoiturages as $item) {
       Le covoiturage demandé est introuvable.
     </div>
   <?php else: ?>
-    <h2>Détail du trajet avec <?= htmlspecialchars($trajet['chauffeur']) ?> 🚗</h2>
+    <h2 class="ms-5">Détail du trajet avec <?= htmlspecialchars($trajet['chauffeur']) ?> 🚗</h2>
 
     <div class="d-flex mt-4">
-      <div class="col-md-4">
+      <div class="col-md-4 ms-3">
         <img src="<?= htmlspecialchars($trajet['photo']) ?>" class="img-fluid rounded shadow" alt="Photo du chauffeur">
         <p class="mt-3"><strong>Note :</strong> <?= htmlspecialchars($trajet['note']) ?> ⭐</p>
       </div>

@@ -1,3 +1,9 @@
+<style>
+  main {
+    background-color:  #F7F6CF;
+  }
+</style>
+
 <?php
 include("includes/header.php");
 include("includes/navbar.php");
@@ -70,7 +76,7 @@ $filtre_prix = $_POST['prix'] ?? '';
     } else {
       foreach ($resultats as $trajet) {
         ?>
-        <div class="col-md-6 mb-4">
+        <div class="col-md-6 mb-4 px-4">
           <div class="card shadow-sm">
             <div class="row g-0">
               <div class="col-md-4">
