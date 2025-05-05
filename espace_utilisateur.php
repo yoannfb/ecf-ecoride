@@ -22,6 +22,34 @@ $stmt2->execute([$user_id]);
 $vehicules = $stmt2->fetchAll();
 ?>
 
+<?php if (isset($_GET['success']) && $_GET['success'] === 'trajet_supprime'): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        ✅ Le trajet a bien été supprimé.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($_GET['erreur']) && $_GET['erreur'] === 'trajet_introuvable'): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        🚫 Impossible de supprimer ce trajet (non trouvé ou non autorisé).
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($_GET['success']) && $_GET['success'] === 'trajet_modifie'): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        ✅ Le trajet a été modifié avec succès.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+    </div>
+<?php endif; ?>
+
+
+<?php if (isset($_GET['erreur']) && $_GET['erreur'] === 'suppression_vehicule'): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        🚫 Ce véhicule ne peut pas être supprimé car il est utilisé dans un ou plusieurs trajets.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+    </div>
+<?php endif; ?>
 <div class="container mt-5">
     <h1 class="mb-4">Espace utilisateur</h1>
 
@@ -76,6 +104,7 @@ $vehicules = $stmt2->fetchAll();
                                     <li><strong>Animaux :</strong> <?= $v['animaux'] ? 'Oui' : 'Non' ?></li>
                                     <li><strong>Préférences :</strong> <?= nl2br(htmlspecialchars($v['preferences_perso'])) ?></li>
                                 </ul>
+                                <a href="modifier_vehicule.php?id=<?= $v['id'] ?>" class="btn btn-sm btn-outline-primary mt-2">Modifier</a>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -85,6 +114,37 @@ $vehicules = $stmt2->fetchAll();
             <?php endif; ?>
         </div>
     </div>
+
+    <!-- Mes Trajets -->
+    <h4 class="mt-5">Mes trajets créés</h4>
+    <?php
+    $stmt = $pdo->prepare("SELECT * FROM trajets WHERE conducteur_id = ? ORDER BY date_depart DESC");
+    $stmt->execute([$user_id]);
+    $mes_trajets = $stmt->fetchAll();
+    ?>
+
+    <?php if ($mes_trajets): ?>
+        <ul class="list-group">
+            <?php foreach ($mes_trajets as $trajet): ?>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong><?= htmlspecialchars($trajet['adresse_depart']) ?> → <?= htmlspecialchars($trajet['adresse_arrivee']) ?></strong><br>
+                        <?= $trajet['date_depart'] ?> — <?= $trajet['prix'] ?> €
+                    </div>
+                    <div>
+                        <a href="modifier_trajet.php?id=<?= $trajet['id'] ?>" class="btn btn-sm btn-outline-primary">Modifier</a>
+                        <form action="supprimer_trajet.php" method="POST" class="d-inline" onsubmit="return confirm('Supprimer ce trajet ?');">
+                            <input type="hidden" name="trajet_id" value="<?= $trajet['id'] ?>">
+                            <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                        </form>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php else: ?>
+        <p class="text-muted">Aucun trajet créé pour le moment.</p>
+    <?php endif; ?>
+
 
     <!-- Boutons utiles -->
     <div class="mt-4">

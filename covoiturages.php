@@ -118,8 +118,6 @@ $filtre_prix = $_POST['prix'] ?? '';
                       <strong><?= htmlspecialchars($trajet['depart']) ?> → <?= htmlspecialchars($trajet['arrivee']) ?></strong><br>
                       Départ : <?= htmlspecialchars($trajet['heure_depart']) ?> | Arrivée : <?= htmlspecialchars($trajet['heure_arrivee']) ?><br>
                       Véhicule : <?= htmlspecialchars($trajet['vehicule']) ?><br>
-                      <p>Valeur eco brute : <?= var_export($trajet['eco'], true) ?></p>
-
                       <?php if (!empty($trajet['eco'])): ?>
                         <span class="badge bg-success">Éco</span>
                       <?php endif; ?>
