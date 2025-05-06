@@ -6,6 +6,10 @@ session_start();
 require_once 'includes/header.php';
 require_once 'includes/navbar.php';
 require_once 'includes/db.php';
+if (isset($_SESSION['user_id'])) {
+    header("Location: espace_utilisateur.php");
+    exit();
+}
 
 ?>
 <div class="d-flex justify-content-around">

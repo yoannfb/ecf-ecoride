@@ -1,3 +1,10 @@
+<style>
+    .trajet {
+        background: #F7F6CF;
+        font-family: EB Garamond;
+    }
+</style>
+
 <?php
 session_start();
 require_once 'includes/header.php';
@@ -26,7 +33,7 @@ $stmt->execute([$user_id]);
 $vehicules = $stmt->fetchAll();
 ?>
 
-<div class="container mt-5">
+<div class="trajet py-5 px-3">
     <h1 class="mb-4">Saisir un trajet</h1>
 
     <form action="traitement_saisie_trajet.php" method="POST" class="border p-4 rounded bg-light">

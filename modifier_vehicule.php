@@ -1,3 +1,11 @@
+<style>
+    .vehicule {
+        background: #F7F6CF;
+        font-family: EB Garamond;
+    }
+</style>
+
+
 <?php
 session_start();
 require_once 'includes/header.php';
@@ -22,7 +30,7 @@ if (!$vehicule) {
 }
 ?>
 
-<div class="container mt-5">
+<div class="vehicule py-5 px-3">
     <h2>Modifier mon véhicule</h2>
     <form method="POST" action="traitement_modifier_vehicule.php">
         <input type="hidden" name="id" value="<?= $vehicule['id'] ?>">

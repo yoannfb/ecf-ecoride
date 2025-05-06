@@ -7,6 +7,10 @@
 session_start();
 require_once 'includes/header.php';
 require_once 'includes/navbar.php';
+if (isset($_SESSION['user_id'])) {
+    header("Location: espace_utilisateur.php");
+    exit();
+}
 ?>
 
 <div class="colornav d-flex flex-column align-items-center text-center pt-5">

@@ -209,7 +209,7 @@ $vehicules = $stmt2->fetchAll();
                         <a href="modifier_trajet.php?id=<?= $trajet['id'] ?>" class="btn btn-sm btn-warning">Modifier</a>
                         <form action="supprimer_trajet.php" method="POST" class="d-inline" onsubmit="return confirm('Supprimer ce trajet ?');">
                             <input type="hidden" name="trajet_id" value="<?= $trajet['id'] ?>">
-                            <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
                         </form>
                     </div>
                 </li>
@@ -227,7 +227,7 @@ $vehicules = $stmt2->fetchAll();
         <?php endif; ?>
         <a href="utilisateur.php" class="btn btn-warning">Modifier mon rôle / véhicule</a>
         <a href="index.php" class="btn btn-outline-secondary">Retour à l'accueil</a>
-        <a href="logout.php" class="btn btn-danger">Se déconnecter</a>
+        <a href="logout.php" class="btn btn-outline-danger">Se déconnecter</a>
     </div>
 </div>
 
