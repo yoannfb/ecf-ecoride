@@ -212,6 +212,22 @@ $vehicules = $stmt2->fetchAll();
                             <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
                         </form>
                     </div>
+                    <?php if ($trajet['statut'] === 'à venir'): ?>
+                        <form action="changer_statut_trajet.php" method="POST" class="d-inline">
+                            <input type="hidden" name="id" value="<?= $trajet['id'] ?>">
+                            <input type="hidden" name="action" value="start">
+                            <button type="submit" class="btn btn-sm btn-outline-success">🚗 Démarrer</button>
+                        </form>
+                    <?php elseif ($trajet['statut'] === 'en cours'): ?>
+                        <form action="changer_statut_trajet.php" method="POST" class="d-inline">
+                            <input type="hidden" name="id" value="<?= $trajet['id'] ?>">
+                            <input type="hidden" name="action" value="finish">
+                            <button type="submit" class="btn btn-sm btn-outline-primary">🏁 Arrivée</button>
+                        </form>
+                    <?php elseif ($trajet['statut'] === 'terminé'): ?>
+                        <span class="badge bg-success">✅ Trajet terminé</span>
+                    <?php endif; ?>
+
                 </li>
             <?php endforeach; ?>
         </ul>

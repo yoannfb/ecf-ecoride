@@ -11,7 +11,9 @@ include("includes/navbar.php");
 require_once 'includes/db.php';
 
 // Requête pour récupérer les trajets à venir depuis la BDD
-$stmt = $pdo->query("
+$filtreStatut = $_GET['statut'] ?? null;
+
+$sql = "
     SELECT 
         t.id,
         t.adresse_depart AS depart,
@@ -20,22 +22,29 @@ $stmt = $pdo->query("
         TIME(t.date_depart) AS heure_depart,
         TIME(t.date_arrivee) AS heure_arrivee,
         t.prix,
+        t.statut,
         u.pseudo AS chauffeur,
         u.photo,
-        v.marque,
-        v.modele,
-        v.couleur,
+        CONCAT(v.marque, ' ', v.modele) AS vehicule,
         v.places,
         v.preferences_perso,
-        5 AS note,
         v.eco,
-        CONCAT(v.marque, ' ', v.modele) AS vehicule
+        5 AS note
     FROM trajets t
     JOIN utilisateurs u ON t.conducteur_id = u.id
     JOIN vehicules v ON t.vehicule_id = v.id
-    WHERE t.statut = 'à venir'
-    ORDER BY t.date_depart ASC
-");
+";
+
+if ($filtreStatut) {
+    $sql .= " WHERE t.statut = ? ORDER BY t.date_depart ASC";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$filtreStatut]);
+} else {
+    $sql .= " ORDER BY t.date_depart ASC";
+    $stmt = $pdo->query($sql);
+}
+
+
 
 $covoiturages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -49,7 +58,7 @@ $filtre_note = $_POST['note'] ?? '';
 $filtre_prix = $_POST['prix'] ?? '';
 ?>
 
-<main class="pt-5">
+<main class="py-5 px-4">
   <h2>Résultats de recherche</h2>
 
   <!-- Formulaire de filtres -->
@@ -89,6 +98,16 @@ $filtre_prix = $_POST['prix'] ?? '';
 
   <!-- Affichage des résultats -->
   <div class="row">
+    <form method="GET" class="mb-4 d-flex align-items-center">
+      <label class="me-2 fw-bold" for="statut">Filtrer par statut :</label>
+      <select name="statut" id="statut" class="form-select w-auto me-2" onchange="this.form.submit()">
+          <option value="">Tous</option>
+          <option value="à venir" <?= ($_GET['statut'] ?? '') === 'à venir' ? 'selected' : '' ?>>À venir</option>
+          <option value="en cours" <?= ($_GET['statut'] ?? '') === 'en cours' ? 'selected' : '' ?>>En cours</option>
+          <option value="terminé" <?= ($_GET['statut'] ?? '') === 'terminé' ? 'selected' : '' ?>>Terminé</option>
+      </select>
+    </form>
+
     <?php
     $resultats = array_filter($covoiturages, function($trajet) use ($depart, $arrivee, $date, $filtre_eco, $filtre_note, $filtre_prix) {
       if ($depart && stripos($trajet['depart'], $depart) === false) return false;
@@ -114,6 +133,24 @@ $filtre_prix = $_POST['prix'] ?? '';
                 <div class="col-md-8">
                   <div class="card-body">
                     <h5 class="card-title"><?= htmlspecialchars($trajet['chauffeur']) ?> (<?= htmlspecialchars($trajet['note']) ?> ⭐)</h5>
+                    <?php
+                    $badge = '';
+                    switch ($trajet['statut']) {
+                        case 'à venir':
+                            $badge = '<span class="badge bg-secondary">À venir</span>';
+                            break;
+                        case 'en cours':
+                            $badge = '<span class="badge bg-warning text-dark">🚗 En cours</span>';
+                            break;
+                        case 'terminé':
+                            $badge = '<span class="badge bg-success">🏁 Terminé</span>';
+                            break;
+                        case 'annulé':
+                            $badge = '<span class="badge bg-danger">❌ Annulé</span>';
+                            break;
+                    }
+                    echo $badge;
+                    ?>
                     <p class="card-text">
                       <strong><?= htmlspecialchars($trajet['depart']) ?> → <?= htmlspecialchars($trajet['arrivee']) ?></strong><br>
                       Départ : <?= htmlspecialchars($trajet['heure_depart']) ?> | Arrivée : <?= htmlspecialchars($trajet['heure_arrivee']) ?><br>
