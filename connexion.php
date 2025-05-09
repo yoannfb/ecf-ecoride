@@ -1,17 +1,44 @@
 
 
 <?php
-// connexion.php
 session_start();
 require_once 'includes/header.php';
 require_once 'includes/navbar.php';
 require_once 'includes/db.php';
+
 if (isset($_SESSION['user_id'])) {
     header("Location: espace_utilisateur.php");
     exit();
 }
 
+$message = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+    if (empty($email) || empty($password)) {
+        $message = "Veuillez remplir tous les champs.";
+    } else {
+        $stmt = $pdo->prepare("SELECT * FROM utilisateurs WHERE email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch();
+
+        if ($user && password_verify($password, $user['mot_de_passe'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['pseudo'] = $user['pseudo'];
+            $_SESSION['email'] = $user['email'];
+            $_SESSION['role'] = $user['role'];
+
+            header("Location: espace_utilisateur.php");
+            exit();
+        } else {
+            $message = "Email ou mot de passe incorrect.";
+        }
+    }
+}
 ?>
+
 <div class="d-flex justify-content-around">
     <div class="col-lg-6 col-md-6 col-sm-12 car pt-5">
         <img src="assets/voiture connexion.jpg" alt="voiture roulant">
@@ -24,7 +51,7 @@ if (isset($_SESSION['user_id'])) {
                 <?= htmlspecialchars($_GET['error']) ?>
             </div>
         <?php endif; ?>
-        <form action="traitement_connexion.php" method="POST" class="mx-auto" style="max-width: 400px;">
+        <form method="POST" class="mx-auto" style="max-width: 400px;">
             <div class="mb-3">
                 <label for="email" class="form-label">Adresse e-mail</label>
                 <input type="email" class="form-control" id="email" name="email" required placeholder="ex : utilisateur@ecoride.fr">

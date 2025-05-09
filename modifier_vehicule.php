@@ -12,6 +12,26 @@ require_once 'includes/header.php';
 require_once 'includes/navbar.php';
 require 'includes/db.php';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = $_POST['id'];
+    $plaque = $_POST['plaque'];
+    $modele = $_POST['modele'];
+    $marque = $_POST['marque'];
+    $couleur = $_POST['couleur'];
+    $date_immat = $_POST['date_immat'];
+    $places = $_POST['places'];
+    $fumeur = isset($_POST['fumeur']) ? 1 : 0;
+    $animaux = isset($_POST['animaux']) ? 1 : 0;
+    $eco = isset($_POST['eco']) ? 1 : 0;
+    $preferences = $_POST['preferences_perso'] ?? '';
+
+    $stmt = $pdo->prepare("UPDATE vehicules SET plaque = ?, modele = ?, marque = ?, couleur = ?, date_immat = ?, places = ?, fumeur = ?, animaux = ?, eco = ?, preferences_perso = ? WHERE id = ?");
+    $stmt->execute([$plaque, $modele, $marque, $couleur, $date_immat, $places, $fumeur, $animaux, $eco, $preferences, $id]);
+
+    header("Location: espace_utilisateur.php?success=vehicule_modifie");
+    exit();
+}
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: connexion.php");
     exit();
@@ -28,11 +48,34 @@ if (!$vehicule) {
     echo "Véhicule introuvable ou accès refusé.";
     exit();
 }
+
+// TRAITEMENT DE SUPPRESSION SI DEMANDE POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
+    $vehicule_id = $_POST['id'];
+
+    // Vérifie si le véhicule est utilisé dans un trajet
+    $check = $pdo->prepare("SELECT COUNT(*) FROM trajets WHERE vehicule_id = ?");
+    $check->execute([$vehicule_id]);
+    $nbTrajets = $check->fetchColumn();
+
+    if ($nbTrajets > 0) {
+        header("Location: espace_utilisateur.php?erreur=suppression_vehicule");
+        exit();
+    }
+
+    // Supprimer le véhicule
+    $delete = $pdo->prepare("DELETE FROM vehicules WHERE id = ?");
+    $delete->execute([$vehicule_id]);
+
+    header("Location: espace_utilisateur.php?success=vehicule_supprime");
+    exit();
+}
+
 ?>
 
 <div class="vehicule py-5 px-3">
     <h2>Modifier mon véhicule</h2>
-    <form method="POST" action="traitement_modifier_vehicule.php">
+    <form method="POST">
         <input type="hidden" name="id" value="<?= $vehicule['id'] ?>">
 
         <div class="mb-3">
@@ -79,10 +122,12 @@ if (!$vehicule) {
         <button type="submit" class="btn btn-success">Enregistrer les modifications</button>
     </form>
     <hr>
-    <form action="supprimer_vehicule.php" method="POST" onsubmit="return confirm('Supprimer définitivement ce véhicule ?');">
-        <input type="hidden" name="vehicule_id" value="<?= $vehicule['id'] ?>">
+    <form method="POST" onsubmit="return confirm('Supprimer définitivement ce véhicule ?');">
+        <input type="hidden" name="id" value="<?= $vehicule['id'] ?>">
+        <input type="hidden" name="delete" value="1">
         <button type="submit" class="btn btn-outline-danger">🗑 Supprimer ce véhicule</button>
     </form>
+
 
 </div>
 

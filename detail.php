@@ -1,64 +1,67 @@
 <style>
-  main {
-    background-color: #F7F6CF !important;
-    font-family: EB Garamond !important;
-    font-size:1.2rem;
-  }
+    main {
+        background-color: #F7F6CF !important;
+        font-family: EB Garamond !important;
+        font-size:1.2rem;
+    }
 
 </style>
 <?php
-include("includes/header.php");
-include("includes/navbar.php");
-include("includes/mock.php");
+session_start();
+require_once 'includes/header.php';
+require_once 'includes/navbar.php';
 require_once 'includes/db.php';
 
-
-// Vérifier que l'ID est bien passé et existe dans le mock
+// Récupère l'ID du trajet depuis l'URL
 $id = $_GET['id'] ?? null;
-$trajet = null;
+$covoiturage_id = $id;
 
-foreach ($covoiturages as $item) {
-  if ($item['id'] == $id) {
-    $trajet = $item;
-    break;
-  }
+if (!$id) {
+    echo "<div class='alert alert-danger'>Aucun trajet sélectionné.</div>";
+    exit;
+}
+
+// Requête pour récupérer un seul trajet par son id
+$stmt = $pdo->prepare("
+    SELECT 
+        t.adresse_depart AS depart,
+        t.adresse_arrivee AS arrivee,
+        DATE(t.date_depart) AS date,
+        TIME(t.date_depart) AS heure_depart,
+        TIME(t.date_arrivee) AS heure_arrivee,
+        t.prix,
+        t.statut,
+        u.pseudo AS chauffeur,
+        u.photo,
+        v.places,
+        v.eco,
+        CONCAT(v.marque, ' ', v.modele) AS vehicule
+    FROM trajets t
+    JOIN utilisateurs u ON t.conducteur_id = u.id
+    JOIN vehicules v ON t.vehicule_id = v.id
+    WHERE t.id = ?
+");
+$stmt->execute([$id]);
+$trajet = $stmt->fetch();
+
+if (!$trajet) {
+    echo "<div class='alert alert-danger'>Trajet introuvable.</div>";
+    exit;
 }
 ?>
 
-<main class="py-5">
-  <?php if (!$trajet): ?>
-    <div class="alert alert-danger">
-      Le covoiturage demandé est introuvable.
-    </div>
-  <?php else: ?>
-    <h2 class="ms-5">Détail du trajet avec <?= htmlspecialchars($trajet['chauffeur']) ?> 🚗</h2>
-
-    <div class="d-flex mt-4">
-      <div class="col-md-4 ms-3">
-        <img src="<?= htmlspecialchars($trajet['photo']) ?>" class="img-fluid rounded shadow" alt="Photo du chauffeur">
-        <p class="mt-3"><strong>Note :</strong> <?= htmlspecialchars($trajet['note']) ?> ⭐</p>
-      </div>
-      <div class="d-flex flex-column ms-5">
-        <ul class="list-group mb-3">
-          <li class="list-group-item"><strong>Départ :</strong> <?= htmlspecialchars($trajet['depart']) ?> à <?= htmlspecialchars($trajet['heure_depart']) ?></li>
-          <li class="list-group-item"><strong>Arrivée :</strong> <?= htmlspecialchars($trajet['arrivee']) ?> à <?= htmlspecialchars($trajet['heure_arrivee']) ?></li>
-          <li class="list-group-item"><strong>Date :</strong> <?= htmlspecialchars($trajet['date']) ?></li>
-          <li class="list-group-item"><strong>Prix :</strong> <?= htmlspecialchars($trajet['prix']) ?> €</li>
-          <li class="list-group-item"><strong>Places restantes :</strong> <?= htmlspecialchars($trajet['places']) ?></li>
-          <li class="list-group-item"><strong>Véhicule :</strong> <?= htmlspecialchars($trajet['vehicule']) ?></li>
-          <li class="list-group-item"><strong>Écologique :</strong> <?= $trajet['eco'] ? '✅ Oui' : '❌ Non' ?></li>
-        </ul>
-
-        <h4>Préférences du conducteur</h4>
-        <p><em>(Cette partie pourra être remplie dynamiquement selon les préférences stockées)</em></p>
-
-        <h4>Avis du conducteur</h4>
-        <p><em>À implémenter avec gestion back-end (US12)</em></p>
-
-        <div class="container mt-5">
-    <!-- Affichage des détails du covoiturage ici -->
-
-    <?php if (!isset($_SESSION['user'])): ?>
+<main class="container py-5">
+    <h2>Détail du trajet avec <?= htmlspecialchars($trajet['chauffeur']) ?> 🚗</h2>
+    <ul class="list-group">
+        <li class="list-group-item"><strong>Départ :</strong> <?= $trajet['depart'] ?> à <?= $trajet['heure_depart'] ?></li>
+        <li class="list-group-item"><strong>Arrivée :</strong> <?= $trajet['arrivee'] ?> à <?= $trajet['heure_arrivee'] ?></li>
+        <li class="list-group-item"><strong>Date :</strong> <?= $trajet['date'] ?></li>
+        <li class="list-group-item"><strong>Prix :</strong> <?= $trajet['prix'] ?> €</li>
+        <li class="list-group-item"><strong>Véhicule :</strong> <?= $trajet['vehicule'] ?></li>
+        <li class="list-group-item"><strong>Places :</strong> <?= $trajet['places'] ?></li>
+        <li class="list-group-item"><strong>Éco :</strong> <?= $trajet['eco'] ? '✅ Oui' : '❌ Non' ?></li>
+    </ul>
+    <?php if (!isset($_SESSION['user_id'])): ?>
         <div class="text-center mt-4">
             <p>Vous devez être connecté pour participer à ce covoiturage.</p>
             <a href="connexion.php?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="btn btn-success">Se connecter</a>
@@ -69,10 +72,10 @@ foreach ($covoiturages as $item) {
             <button type="submit" class="btn btn-success">Participer à ce covoiturage</button>
         </form>
     <?php endif; ?>
-</div>
-      </div>
-    </div>
-  <?php endif; ?>
+
+
+    <a href="covoiturages.php" class="btn btn-secondary mt-4">← Retour</a>
 </main>
 
 <?php include("includes/footer.php"); ?>
+

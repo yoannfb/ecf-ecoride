@@ -15,7 +15,7 @@ if (!$covoiturage_id) {
 }
 
 // 1. Récupérer le covoiturage
-$sql = "SELECT * FROM covoiturages WHERE id = ?";
+$sql = "SELECT * FROM trajets WHERE id = ?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$covoiturage_id]);
 $covoiturage = $stmt->fetch();
@@ -38,30 +38,15 @@ if ($user['credits'] < $covoiturage['prix']) {
     die("Crédits insuffisants.");
 }
 
-// 3. Confirmer participation + MAJ
-try {
-    $pdo->beginTransaction();
+// Enregistrer la participation
+$insert = $pdo->prepare("INSERT INTO participations (utilisateur_id, covoiturage_id, date_participation)
+                        VALUES (?, ?, NOW())");
+$insert->execute([$user_id, $covoiturage_id]);
 
-    // Déduire crédits utilisateur
-    $sql = "UPDATE utilisateurs SET credits = credits - ? WHERE id = ?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$covoiturage['prix'], $user_id]);
+// Décrémenter le nombre de places disponibles
+$update = $pdo->prepare("UPDATE trajets SET places_disponibles = places_disponibles - 1 WHERE id = ?");
+$update->execute([$covoiturage_id]);
 
-    // Mettre à jour les places restantes
-    $sql = "UPDATE covoiturages SET places_disponibles = places_disponibles - 1 WHERE id = ?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$covoiturage_id]);
-
-    // Enregistrer la participation
-    $sql = "INSERT INTO participations (utilisateur_id, covoiturage_id, date_participation)
-            VALUES (?, ?, NOW())";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$user_id, $covoiturage_id]);
-
-    $pdo->commit();
-    header("Location: utilisateur.php?success=1");
-    exit;
-} catch (Exception $e) {
-    $pdo->rollBack();
-    die("Erreur lors de la participation : " . $e->getMessage());
-}
+// Redirection
+header("Location: espace_utilisateur.php?success=participation");
+exit;

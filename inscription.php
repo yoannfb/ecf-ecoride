@@ -11,6 +11,35 @@ if (isset($_SESSION['user_id'])) {
     header("Location: espace_utilisateur.php");
     exit();
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $pseudo = $_POST['pseudo'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
+    $confirm_password = $_POST['confirm_password'] ?? '';
+
+    if (empty($pseudo) || empty($email) || empty($password) || empty($confirm_password)) {
+        $message = "Veuillez remplir tous les champs.";
+    } elseif ($password !== $confirm_password) {
+        $message = "Les mots de passe ne correspondent pas.";
+    } else {
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        $stmt = $pdo->prepare("SELECT id FROM utilisateurs WHERE email = ?");
+        $stmt->execute([$email]);
+
+        if ($stmt->rowCount() > 0) {
+            $message = "Un compte existe déjà avec cette adresse e-mail.";
+        } else {
+            $stmt = $pdo->prepare("INSERT INTO utilisateurs (pseudo, email, mot_de_passe) VALUES (?, ?, ?)");
+            $stmt->execute([$pseudo, $email, $hashedPassword]);
+
+            header("Location: connexion.php?success=compte");
+            exit;
+        }
+    }
+}
+
 ?>
 
 <div class="colornav d-flex flex-column align-items-center text-center pt-5">
@@ -28,7 +57,12 @@ if (isset($_SESSION['user_id'])) {
         </div>
     <?php endif; ?>
 
-    <form action="traitement_inscription.php" method="POST">
+    <?php if (!empty($message)): ?>
+        <div class="alert alert-danger text-center"><?= htmlspecialchars($message) ?></div>
+    <?php endif; ?>
+
+
+    <form method="POST">
         <div class="mb-3">
             <label for="pseudo" class="form-label">Pseudo :</label>
             <input type="text" name="pseudo" id="pseudo" class="form-control" required>

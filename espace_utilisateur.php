@@ -89,6 +89,20 @@ $stmt2->execute([$user_id]);
 $vehicules = $stmt2->fetchAll();
 ?>
 
+<?php
+// Trajets auxquels l'utilisateur participe
+$stmt = $pdo->prepare("
+    SELECT t.*, u.pseudo AS conducteur
+    FROM participations p
+    JOIN trajets t ON p.covoiturage_id = t.id
+    JOIN utilisateurs u ON t.conducteur_id = u.id
+    WHERE p.utilisateur_id = ?
+");
+$stmt->execute([$user_id]);
+$trajets_participes = $stmt->fetchAll();
+?>
+
+
 <?php if (isset($_GET['success']) && $_GET['success'] === 'trajet_supprime'): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         ✅ Le trajet a bien été supprimé.
@@ -188,6 +202,29 @@ $vehicules = $stmt2->fetchAll();
             <?php endif; ?>
         </div>
     </div>
+    
+    <h2 class="mt-5">🧍 Mes participations</h2>
+    <?php if (empty($trajets_participes)): ?>
+        <p>Vous n'avez rejoint aucun covoiturage.</p>
+    <?php else: ?>
+        <ul class="list-group">
+            <?php foreach ($trajets_participes as $trajet): ?>
+                <li class="list-group-item">
+                    <strong><?= htmlspecialchars($trajet['adresse_depart']) ?></strong> → 
+                    <strong><?= htmlspecialchars($trajet['adresse_arrivee']) ?></strong><br>
+                    Date : <?= date('d/m/Y', strtotime($trajet['date_depart'])) ?><br>
+                    Conducteur : <?= htmlspecialchars($trajet['conducteur']) ?><br>
+
+                    <a href="annuler_participation.php?id=<?= $trajet['id'] ?>" 
+                        class="btn btn-outline-danger btn-sm mt-2"
+                        onclick="return confirm('Annuler votre participation ?');">
+                        ❌ Annuler
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
 
     <!-- Mes Trajets -->
     <h4 class="mt-5">Mes trajets créés</h4>
@@ -207,10 +244,6 @@ $vehicules = $stmt2->fetchAll();
                     </div>
                     <div>
                         <a href="modifier_trajet.php?id=<?= $trajet['id'] ?>" class="btn btn-sm btn-warning">Modifier</a>
-                        <form action="supprimer_trajet.php" method="POST" class="d-inline" onsubmit="return confirm('Supprimer ce trajet ?');">
-                            <input type="hidden" name="trajet_id" value="<?= $trajet['id'] ?>">
-                            <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
-                        </form>
                     </div>
                     <?php if ($trajet['statut'] === 'à venir'): ?>
                         <form action="changer_statut_trajet.php" method="POST" class="d-inline">

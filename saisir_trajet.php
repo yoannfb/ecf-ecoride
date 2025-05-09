@@ -31,12 +31,39 @@ if (!in_array($role, ['chauffeur', 'les-deux'])) {
 $stmt = $pdo->prepare("SELECT id, marque, modele FROM vehicules WHERE utilisateur_id = ?");
 $stmt->execute([$user_id]);
 $vehicules = $stmt->fetchAll();
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $vehicule_id = $_POST['vehicule_id'];
+    $stmt = $pdo->prepare("SELECT places FROM vehicules WHERE id = ?");
+    $stmt->execute([$vehicule_id]);
+    $places = $stmt->fetchColumn();
+
+    $stmt = $pdo->prepare("INSERT INTO trajets 
+        (conducteur_id, vehicule_id, adresse_depart, adresse_arrivee, date_depart, date_arrivee, prix, places_disponibles)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+
+    $stmt->execute([
+        $user_id,
+        $vehicule_id,
+        $_POST['adresse_depart'],
+        $_POST['adresse_arrivee'],
+        $_POST['date_depart'],
+        $_POST['date_arrivee'],
+        $_POST['prix'],
+        $places
+    ]);
+
+    header("Location: espace_utilisateur.php?success=participation");
+exit;
+
+}
 ?>
 
 <div class="trajet py-5 px-3">
     <h1 class="mb-4">Saisir un trajet</h1>
 
-    <form action="traitement_saisie_trajet.php" method="POST" class="border p-4 rounded bg-light">
+    <form method="POST" class="border p-4 rounded bg-light">
         <div class="mb-3">
             <label for="vehicule">Véhicule</label>
             <select name="vehicule_id" id="vehicule" class="form-select" required>
