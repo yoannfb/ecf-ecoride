@@ -1,15 +1,23 @@
 <?php
-$host = '127.0.0.1';  // ou 'localhost'
-$port = '3307';       // important avec XAMPP si MySQL tourne là-dessus
-$dbname = 'ecoride';
-$user = 'root';
-$pass = '';
+// Connexion à la base JawsDB sur Heroku
+$url = parse_url(getenv("JAWSDB_URL"));
+
+$host = $url["host"];
+$dbname = substr($url["path"], 1);
+$user = $url["user"];
+$pass = $url["pass"];
+
+$dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
 
 try {
-    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    $pdo = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
+    // echo "Connexion réussie à la base de données !";
 } catch (PDOException $e) {
     die("Erreur de connexion à la base de données : " . $e->getMessage());
 }
+?>
+
 
