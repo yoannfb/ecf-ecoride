@@ -7,11 +7,13 @@
 
 
 <?php
+// Démarre la session, inclut les éléments d'en-tête, de navigation et la connexion à la base de données
 session_start();
 require_once 'includes/header.php';
 require_once 'includes/navbar.php';
 require 'includes/db.php';
 
+// Si le formulaire a été soumis (modification du véhicule)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
     $plaque = $_POST['plaque'];
@@ -25,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $eco = isset($_POST['eco']) ? 1 : 0;
     $preferences = $_POST['preferences_perso'] ?? '';
 
+    // Met à jour les informations du véhicule dans la base
     $stmt = $pdo->prepare("UPDATE vehicules SET plaque = ?, modele = ?, marque = ?, couleur = ?, date_immat = ?, places = ?, fumeur = ?, animaux = ?, eco = ?, preferences_perso = ? WHERE id = ?");
     $stmt->execute([$plaque, $modele, $marque, $couleur, $date_immat, $places, $fumeur, $animaux, $eco, $preferences, $id]);
 
@@ -32,24 +35,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 
+// Vérifie que l'utilisateur est connecté, sinon redirige
 if (!isset($_SESSION['user_id'])) {
     header("Location: connexion.php");
     exit();
 }
 
 $user_id = $_SESSION['user_id'];
+// Récupère l'identifiant du véhicule depuis l'URL
 $vehicule_id = $_GET['id'] ?? null;
 
+// Récupère le véhicule appartenant à l'utilisateur pour affichage/modification
 $stmt = $pdo->prepare("SELECT * FROM vehicules WHERE id = ? AND utilisateur_id = ?");
 $stmt->execute([$vehicule_id, $user_id]);
 $vehicule = $stmt->fetch();
 
+// Si le véhicule n'est pas trouvé ou n'appartient pas à l'utilisateur, afficher un message d'erreur
 if (!$vehicule) {
     echo "Véhicule introuvable ou accès refusé.";
     exit();
 }
 
 // TRAITEMENT DE SUPPRESSION SI DEMANDE POST
+// Si le formulaire a été soumis avec la demande de suppression du véhicule
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
     $vehicule_id = $_POST['id'];
 
