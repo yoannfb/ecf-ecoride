@@ -4,18 +4,22 @@
   }
 </style>
 
-<?php
 
+
+
+<?php
+// Inclusion des éléments d'en-tête, barre de navigation et base de données
 require_once 'includes/header.php';
 require_once 'includes/navbar.php';
 require_once 'includes/db.php';
 
-
+// Récupération des champs du formulaire de recherche avec valeurs par défaut
 $depart = $_POST['depart'] ?? '';
 $arrivee = $_POST['arrivee'] ?? '';
 $date = $_POST['date'] ?? '';
 
 // Requête SQL simple
+// Construction de la requête SQL pour récupérer les trajets disponibles
 $sql = "SELECT
           t.id,
           t.adresse_depart AS depart,
@@ -33,18 +37,22 @@ $sql = "SELECT
         JOIN vehicules v ON t.vehicule_id = v.id
         WHERE t.statut = 'à venir'";
 
+// Tableau pour stocker dynamiquement les paramètres de la requête
 $params = [];
 
+// Ajout du filtre de ville de départ si précisé
 if (!empty($depart)) {
     $sql .= " AND t.adresse_depart LIKE ?";
     $params[] = "%$depart%";
 }
 
+// Ajout du filtre de ville d'arrivée si précisé
 if (!empty($arrivee)) {
     $sql .= " AND t.adresse_arrivee LIKE ?";
     $params[] = "%$arrivee%";
 }
 
+// Ajout du filtre de date si précisé
 if (!empty($date)) {
     $sql .= " AND DATE(t.date_depart) = ?";
     $params[] = $date;
@@ -52,9 +60,10 @@ if (!empty($date)) {
 
 $sql .= " ORDER BY t.date_depart ASC";
 
+// Préparation et exécution de la requête SQL avec les filtres
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
-$covoiturages = $stmt->fetchAll();
+$covoiturages = $stmt->fetchAll(); // Récupération de tous les trajets correspondants
 ?>
 
 <main class="container py-4">
@@ -74,11 +83,11 @@ $covoiturages = $stmt->fetchAll();
     </div>
   </form>
 
-  <?php if (empty($covoiturages)): ?>
+  <?php if (empty($covoiturages)):  // Inclusion des éléments d'en-tête, barre de navigation et base de données if (empty($covoiturages)): ?>
     <p class="text-muted">Aucun trajet trouvé pour votre recherche.</p>
-  <?php else: ?>
+  <?php else: // Inclusion des éléments d'en-tête, barre de navigation et base de données else: ?>
     <div class="row">
-      <?php foreach ($covoiturages as $trajet): ?>
+      <?php foreach ($covoiturages as $trajet): // Inclusion des éléments d'en-tête, barre de navigation et base de données foreach ($covoiturages as $trajet): ?>
         <div class="col-md-6 mb-4">
           <div class="card">
             <div class="card-body">
@@ -91,17 +100,17 @@ $covoiturages = $stmt->fetchAll();
               <p>Prix : <?= htmlspecialchars($trajet['prix']) ?> €</p>
               <p>Véhicule : <?= htmlspecialchars($trajet['vehicule']) ?></p>
               <p><strong>Places disponibles :</strong> <?= $trajet['places'] ?></p>
-              <?php if (!empty($trajet['eco'])): ?>
+              <?php if (!empty($trajet['eco'])): // Inclusion des éléments d'en-tête, barre de navigation et base de données if (!empty($trajet['eco'])): ?>
                 <span class="badge bg-success">🌿 Éco</span>
-              <?php endif; ?>
+              <?php endif; // Inclusion des éléments d'en-tête, barre de navigation et base de données endif; ?>
               <a href="detail.php?id=<?= $trajet['id'] ?>" class="btn btn-outline-success btn-sm">Voir le détail</a>
             </div>
           </div>
         </div>
-      <?php endforeach; ?>
+      <?php endforeach; // Inclusion des éléments d'en-tête, barre de navigation et base de données endforeach; ?>
     </div>
-  <?php endif; ?>
+  <?php endif; // Inclusion des éléments d'en-tête, barre de navigation et base de données endif; ?>
 </main>
 
-<?php include("includes/footer.php"); ?>
+<?php include("includes/footer.php"); // Inclusion du footer; ?>
 
