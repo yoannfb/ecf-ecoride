@@ -244,7 +244,7 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'suppression_vehicule'): ?>
     <!-- Mes Trajets -->
     <h4 class="mt-5">Mes trajets créés</h4>
     <?php
-    // Démarre la creéation d'un trajet et inclut les fichiers nécessaires (en-tête, navigation, base de données)
+    // Démarre la création d'un trajet et inclut les fichiers nécessaires (en-tête, navigation, base de données)
     $stmt = $pdo->prepare("SELECT * FROM trajets WHERE conducteur_id = ? ORDER BY date_depart DESC");
     $stmt->execute([$user_id]);
     $mes_trajets = $stmt->fetchAll();
