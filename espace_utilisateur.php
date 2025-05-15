@@ -66,24 +66,29 @@
 </style>
 
 <?php
+// Démarre la session et inclut les fichiers nécessaires (en-tête, navigation, base de données)
 session_start();
 require_once 'includes/header.php';
 require_once 'includes/navbar.php';
 require 'includes/db.php';
 
+// Redirige l'utilisateur vers la page de connexion s'il n'est pas authentifié
 if (!isset($_SESSION['user_id'])) {
     header("Location: connexion.php");
     exit();
 }
 
+// Récupère l'ID de l'utilisateur connecté depuis la session
 $user_id = $_SESSION['user_id'];
 
 // Récupère les infos de l'utilisateur
+// Requête pour obtenir les informations de l'utilisateur connecté
 $stmt = $pdo->prepare("SELECT pseudo, email, credits, role FROM utilisateurs WHERE id = ?");
 $stmt->execute([$user_id]);
 $user = $stmt->fetch();
 
 // Récupère les véhicules de l'utilisateur
+// Requête pour récupérer les véhicules liés à cet utilisateur
 $stmt2 = $pdo->prepare("SELECT * FROM vehicules WHERE utilisateur_id = ?");
 $stmt2->execute([$user_id]);
 $vehicules = $stmt2->fetchAll();
@@ -103,7 +108,9 @@ $trajets_participes = $stmt->fetchAll();
 ?>
 
 
-<?php if (isset($_GET['success']) && $_GET['success'] === 'trajet_supprime'): ?>
+<?php 
+// Démarre la partie de suppression d'un trajet et inclut les fichiers nécessaires (en-tête, navigation, base de données) if (isset($_GET['success']) && $_GET['success'] === 'trajet_supprime'):
+if (isset($_GET['success']) && $_GET['success'] === 'trajet_supprime'): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         ✅ Le trajet a bien été supprimé.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
@@ -117,7 +124,9 @@ $trajets_participes = $stmt->fetchAll();
     </div>
 <?php endif; ?>
 
-<?php if (isset($_GET['success']) && $_GET['success'] === 'trajet_modifie'): ?>
+<?php
+// Démarre la partie de modification d'un trajet et inclut les fichiers nécessaires (en-tête, navigation, base de données) if (isset($_GET['success']) && $_GET['success'] === 'trajet_modifie'):
+if (isset($_GET['success']) && $_GET['success'] === 'trajet_modifie'): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         ✅ Le trajet a été modifié avec succès.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
@@ -125,7 +134,9 @@ $trajets_participes = $stmt->fetchAll();
 <?php endif; ?>
 
 
-<?php if (isset($_GET['erreur']) && $_GET['erreur'] === 'suppression_vehicule'): ?>
+<?php
+// Démarre la partie de suppression d'un véhicule et inclut les fichiers nécessaires (en-tête, navigation, base de données) if (isset($_GET['erreur']) && $_GET['erreur'] === 'suppression_vehicule'):
+if (isset($_GET['erreur']) && $_GET['erreur'] === 'suppression_vehicule'): ?>
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         🚫 Ce véhicule ne peut pas être supprimé car il est utilisé dans un ou plusieurs trajets.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
@@ -157,7 +168,9 @@ $trajets_participes = $stmt->fetchAll();
                 Modifier ma photo de profil
             </div>
             <div class="card-body">
-                <?php if (!empty($user['photo'])): ?>
+                <?php 
+                // Démarre la partie de traitement de la photo de profil et inclut les fichiers nécessaires (en-tête, navigation, base de données) if (!empty($user['photo'])):
+                if (!empty($user['photo'])): ?>
                     <img src="uploads/<?= htmlspecialchars($user['photo']) ?>" alt="Photo de profil" class="mb-3 rounded-circle" width="100">
                 <?php endif; ?>
 
@@ -204,7 +217,9 @@ $trajets_participes = $stmt->fetchAll();
     </div>
     
     <h2 class="mt-5">🧍 Mes participations</h2>
-    <?php if (empty($trajets_participes)): ?>
+    <?php 
+    // Démarre la partie sur la participation aux trajets et inclut les fichiers nécessaires (en-tête, navigation, base de données) if (empty($trajets_participes)):
+    if (empty($trajets_participes)): ?>
         <p>Vous n'avez rejoint aucun covoiturage.</p>
     <?php else: ?>
         <ul class="list-group">
@@ -229,12 +244,15 @@ $trajets_participes = $stmt->fetchAll();
     <!-- Mes Trajets -->
     <h4 class="mt-5">Mes trajets créés</h4>
     <?php
+    // Démarre la creéation d'un trajet et inclut les fichiers nécessaires (en-tête, navigation, base de données)
     $stmt = $pdo->prepare("SELECT * FROM trajets WHERE conducteur_id = ? ORDER BY date_depart DESC");
     $stmt->execute([$user_id]);
     $mes_trajets = $stmt->fetchAll();
     ?>
 
-    <?php if ($mes_trajets): ?>
+    <?php
+    // Démarre la partie gestion des trajets et inclut les fichiers nécessaires (en-tête, navigation, base de données)
+    if ($mes_trajets): ?>
         <ul class="list-group">
             <?php foreach ($mes_trajets as $trajet): ?>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -282,4 +300,4 @@ $trajets_participes = $stmt->fetchAll();
 
 
 
-<?php require_once 'includes/footer.php'; ?>
+<?php require_once 'includes/footer.php'; // Inclusion du footer; ?>
