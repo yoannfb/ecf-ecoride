@@ -1,30 +1,39 @@
 
 
 <?php
+// Démarrage de la session et inclusion des éléments nécessaires
 session_start();
 require_once 'includes/header.php';
 require_once 'includes/navbar.php';
 require_once 'includes/db.php';
 
+// Si l'utilisateur est déjà connecté, on le redirige vers son espace
 if (isset($_SESSION['user_id'])) {
     header("Location: espace_utilisateur.php");
     exit();
 }
 
+// Initialisation du message d'erreur (vide par défaut)
 $message = '';
 
+// Vérifie si le formulaire a été soumis via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Récupère l'email et le mot de passe soumis
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
+    // Vérifie que les deux champs sont remplis
     if (empty($email) || empty($password)) {
         $message = "Veuillez remplir tous les champs.";
     } else {
+        // Prépare et exécute une requête pour trouver l'utilisateur par email
         $stmt = $pdo->prepare("SELECT * FROM utilisateurs WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch();
 
+        // Si l'utilisateur existe et que le mot de passe est correct
         if ($user && password_verify($password, $user['mot_de_passe'])) {
+            // Stocke les informations de l'utilisateur en session
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['pseudo'] = $user['pseudo'];
             $_SESSION['email'] = $user['email'];
@@ -33,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: espace_utilisateur.php");
             exit();
         } else {
+            // Sinon, affiche un message d'erreur
             $message = "Email ou mot de passe incorrect.";
         }
     }
@@ -46,11 +56,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="col-lg-6 col-md-6 col-sm-12 d-flex flex-column covoit pt-5">
         <h2 class="text-center mb-4">Connexion à EcoRide</h2>
-        <?php if (isset($_GET['error'])): ?>
+        <?php if (isset($_GET['error'])): // Démarrage de la session et inclusion des éléments nécessaires if (isset($_GET['error'])): ?>
             <div class="alert alert-danger text-center">
                 <?= htmlspecialchars($_GET['error']) ?>
             </div>
-        <?php endif; ?>
+        <?php endif; // Démarrage de la session et inclusion des éléments nécessaires endif; ?>
         <form method="POST" class="mx-auto" style="max-width: 400px;">
             <div class="mb-3">
                 <label for="email" class="form-label">Adresse e-mail</label>
@@ -69,4 +79,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </div>
 
-<?php require_once 'includes/footer.php'; ?>
+<?php require_once 'includes/footer.php'; // Inclusion du footer; ?>
