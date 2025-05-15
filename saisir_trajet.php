@@ -6,11 +6,13 @@
 </style>
 
 <?php
+// Démarre la session et inclut les éléments nécessaires
 session_start();
 require_once 'includes/header.php';
 require_once 'includes/navbar.php';
 require_once 'includes/db.php';
 
+// Redirige si l'utilisateur n'est pas connecté
 if (!isset($_SESSION['user_id'])) {
     header("Location: connexion.php");
     exit();
@@ -18,7 +20,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Vérifie que l'utilisateur est bien chauffeur
+// Vérifie que l'utilisateur a le rôle chauffeur ou les-deux
 $stmt = $pdo->prepare("SELECT role FROM utilisateurs WHERE id = ?");
 $stmt->execute([$user_id]);
 $role = $stmt->fetchColumn();
@@ -27,18 +29,20 @@ if (!in_array($role, ['chauffeur', 'les-deux'])) {
     exit();
 }
 
-// Récupère les véhicules du chauffeur
+// Récupère les véhicules associés à l'utilisateur pour le formulaire
 $stmt = $pdo->prepare("SELECT id, marque, modele FROM vehicules WHERE utilisateur_id = ?");
 $stmt->execute([$user_id]);
 $vehicules = $stmt->fetchAll();
 
-
+// Si le formulaire est soumis
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $vehicule_id = $_POST['vehicule_id'];
+    // Récupère le nombre de places du véhicule sélectionné
     $stmt = $pdo->prepare("SELECT places FROM vehicules WHERE id = ?");
     $stmt->execute([$vehicule_id]);
     $places = $stmt->fetchColumn();
 
+    // Insère le trajet dans la base de données
     $stmt = $pdo->prepare("INSERT INTO trajets 
         (conducteur_id, vehicule_id, adresse_depart, adresse_arrivee, date_depart, date_arrivee, prix, places_disponibles)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -54,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $places
     ]);
 
+    // Redirige après succès
     header("Location: espace_utilisateur.php?success=participation");
 exit;
 
