@@ -1,7 +1,9 @@
 <?php
+// Démarre la session et inclut les éléments nécessaires
 session_start();
 require 'includes/db.php';
 
+// Redirige si l'utilisateur n'est pas connecté
 if (!isset($_SESSION['user_id'])) {
     header("Location: connexion.php");
     exit();

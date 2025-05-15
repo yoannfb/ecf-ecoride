@@ -1,4 +1,5 @@
 <?php
+// Démarre la session et inclut les éléments nécessaires
 session_start();
 require 'includes/db.php'; // adapte le chemin si nécessaire
 
