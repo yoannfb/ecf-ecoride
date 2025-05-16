@@ -8,7 +8,7 @@
 
 <footer class="d-flex justify-content-around color text-center py-4">
   <p>Contact : <a href="mailto:contact@ecoride.fr">contact@ecoride.fr</a></p>
-  <p><a href="#">Mentions légales</a></p>
+  <p><a href="mentions_legales.php">Mentions légales</a></p>
   <p>&#169 EcoRide</p>
 
 </footer>
