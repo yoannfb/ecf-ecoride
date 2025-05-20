@@ -20,7 +20,7 @@ require_once 'includes/navbar.php';
 ?>
 
 <div class="principal">
-    <div class="container mt-5">
+    <div class="container pt-5 pb-2">
         <h1>Mentions légales</h1>
 
         <h2>Éditeur du site</h2>
