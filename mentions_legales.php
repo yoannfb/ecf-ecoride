@@ -1,8 +1,11 @@
 <style>
+    body {
+        background-color: #873e23;
+    }
     .container {
         background-color: #F7F6CF;
     }
-    
+
 </style>
 
 
