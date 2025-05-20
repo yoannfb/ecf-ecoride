@@ -1,3 +1,12 @@
+<style>
+    .container {
+        background-color: #F7F6CF;
+    }
+    
+</style>
+
+
+
 <?php
 session_start();
 require_once 'includes/header.php';
