@@ -31,6 +31,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$email]);
         $user = $stmt->fetch();
 
+        // Après $stmt->execute([$email]);
+$user = $stmt->fetch();
+
+        // Si l'employé existe et que le mot de passe est correct
+        if ($user && password_verify($password, $user['mot_de_passe'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['role'] = $user['role'];
+
+            if ($user['role'] === 'employe') {
+                header("Location: espace_employe.php");
+            } else {
+                header("Location: espace_utilisateur.php");
+            }
+            exit();
+        }
+
+
         // Si l'utilisateur existe et que le mot de passe est correct
         if ($user && password_verify($password, $user['mot_de_passe'])) {
             // Stocke les informations de l'utilisateur en session
