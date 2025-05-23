@@ -30,7 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("SELECT * FROM utilisateurs WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch();
-
+        var_dump($user['role']);
+            exit;
         // Après $stmt->execute([$email]);
 $user = $stmt->fetch();
 
@@ -39,14 +40,13 @@ $user = $stmt->fetch();
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['role'] = $user['role'];
 
-            //if ($user['role'] === 'employe') {
-                //header("Location: employe/espace_employe.php");
-            //} else {
-                //header("Location: espace_utilisateur.php");
-            //}
-            //exit();
-            var_dump($user['role']);
-            exit;
+            if ($user['role'] === 'employe') {
+                header("Location: employe/espace_employe.php");
+            } else {
+                header("Location: espace_utilisateur.php");
+            }
+            exit();
+            
 
         }
 
