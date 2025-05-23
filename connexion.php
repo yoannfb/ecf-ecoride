@@ -2,6 +2,8 @@
 
 <?php
 // Démarrage de la session et inclusion des éléments nécessaires
+session_destroy(); // force la fermeture de toute session existante
+
 session_start();
 require_once 'includes/header.php';
 require_once 'includes/navbar.php';
