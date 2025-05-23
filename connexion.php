@@ -40,7 +40,7 @@ $user = $stmt->fetch();
             $_SESSION['role'] = $user['role'];
 
             if ($user['role'] === 'employe') {
-                header("Location: espace_employe.php");
+                header("Location: employe/espace_employe.php");
             } else {
                 header("Location: espace_utilisateur.php");
             }
