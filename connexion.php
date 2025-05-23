@@ -30,9 +30,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("SELECT * FROM utilisateurs WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch();
-        
+
         var_dump($user['role']);
+        var_dump($user);
         exit;
+
         // Après $stmt->execute([$email]);
 $user = $stmt->fetch();
 
