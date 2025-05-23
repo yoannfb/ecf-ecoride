@@ -39,12 +39,15 @@ $user = $stmt->fetch();
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['role'] = $user['role'];
 
-            if ($user['role'] === 'employe') {
-                header("Location: employe/espace_employe.php");
-            } else {
-                header("Location: espace_utilisateur.php");
-            }
-            exit();
+            //if ($user['role'] === 'employe') {
+                //header("Location: employe/espace_employe.php");
+            //} else {
+                //header("Location: espace_utilisateur.php");
+            //}
+            //exit();
+            var_dump($user['role']);
+            exit;
+
         }
 
 
