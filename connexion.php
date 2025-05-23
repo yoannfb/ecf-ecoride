@@ -1,5 +1,3 @@
-
-
 <?php
 // Démarrage de la session et inclusion des éléments nécessaires
 session_start();
@@ -7,46 +5,66 @@ require_once 'includes/header.php';
 require_once 'includes/navbar.php';
 require_once 'includes/db.php';
 
+// Si l'utilisateur est déjà connecté, on le redirige vers son espace
+if (isset($_SESSION['user_id'])) {
+    header("Location: espace_utilisateur.php");
+    exit();
+}
+
+// Initialisation du message d'erreur (vide par défaut)
 $message = '';
 
+// Vérifie si le formulaire a été soumis via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Récupère l'email et le mot de passe soumis
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
+    // Vérifie que les deux champs sont remplis
     if (empty($email) || empty($password)) {
         $message = "Veuillez remplir tous les champs.";
     } else {
+        // Prépare et exécute une requête pour trouver l'utilisateur par email
         $stmt = $pdo->prepare("SELECT * FROM utilisateurs WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch();
 
-        if ($user) {
-            echo "<pre>";
-            echo "Contenu de \$user :\n";
-            print_r($user);
-            echo "</pre>";
+        var_dump($user['role']);
+        var_dump($user);
+        exit;
 
-            if (password_verify($password, $user['mot_de_passe'])) {
-                echo "Mot de passe correct<br>";
+        // Après $stmt->execute([$email]);
+$user = $stmt->fetch();
 
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['role'] = $user['role'];
+        // Si l'employé existe et que le mot de passe est correct
+        if ($user && password_verify($password, $user['mot_de_passe'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['role'] = $user['role'];
 
-                echo "Rôle détecté : " . $user['role'] . "<br>";
-
-                if (trim($user['role']) === 'employe') {
-                    echo "Redirection vers espace_employe.php<br>";
-                    header("Location: employe/espace_employe.php");
-                } else {
-                    echo "Redirection vers espace_utilisateur.php<br>";
-                    header("Location: espace_utilisateur.php");
-                }
-                exit;
+            if ($user['role'] === 'employe') {
+                header("Location: employe/espace_employe.php");
             } else {
-                echo "Mot de passe incorrect";
+                header("Location: espace_utilisateur.php");
             }
+            exit();
+            
+
+        }
+
+
+        // Si l'utilisateur existe et que le mot de passe est correct
+        if ($user && password_verify($password, $user['mot_de_passe'])) {
+            // Stocke les informations de l'utilisateur en session
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['pseudo'] = $user['pseudo'];
+            $_SESSION['email'] = $user['email'];
+            $_SESSION['role'] = $user['role'];
+
+            header("Location: espace_utilisateur.php");
+            exit();
         } else {
-            echo "Utilisateur non trouvé";
+            // Sinon, affiche un message d'erreur
+            $message = "Email ou mot de passe incorrect.";
         }
     }
 }
