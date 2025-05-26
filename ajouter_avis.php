@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $auteur_id = $_SESSION['user_id'];
     $trajet_id = $_POST['trajet_id'] ?? null;
     $note = $_POST['note'] ?? null;
-    $commentaire = trim($_POST['commentaire']);
+    $commentaire = trim($_POST['commentaire'] ?? '');
 
     if ($trajet_id && $note && $commentaire) {
         $stmt = $pdo->prepare("INSERT INTO avis (trajet_id, auteur_id, note, commentaire, statut) VALUES (?, ?, ?, ?, 'en attente')");
@@ -22,5 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo "Formulaire incomplet.";
     }
+} else {
+    echo "Méthode non autorisée.";
 }
 ?>
