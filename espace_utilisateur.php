@@ -260,6 +260,21 @@ $trajets_participes = $stmt->fetchAll();
                     <?php elseif ($trajet['statut'] === 'terminé'): ?>
                         <span class="badge bg-success">✅ Trajet terminé</span>
                     <?php endif; ?>
+                    <form action="ajouter_avis.php" method="post" style="margin-top:10px;">
+                        <input type="hidden" name="trajet_id" value="<?= $trajet['id'] ?>">
+                        <label for="note_<?= $trajet['id'] ?>">Note :</label>
+                        <select name="note" id="note_<?= $trajet['id'] ?>" required>
+                            <option value="5">5 - Excellent</option>
+                            <option value="4">4 - Très bien</option>
+                            <option value="3">3 - Bien</option>
+                            <option value="2">2 - Moyen</option>
+                            <option value="1">1 - Mauvais</option>
+                        </select>
+                        <br>
+                        <label for="commentaire_<?= $trajet['id'] ?>">Commentaire :</label><br>
+                        <textarea name="commentaire" id="commentaire_<?= $trajet['id'] ?>" rows="3" cols="40" required></textarea><br>
+                        <button type="submit">Envoyer l'avis</button>
+                    </form>
 
                 </li>
             <?php endforeach; ?>
