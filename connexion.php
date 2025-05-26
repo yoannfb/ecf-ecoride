@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // Démarrage de la session et inclusion des éléments nécessaires
 session_start();
 require_once 'includes/header.php';
