@@ -1,10 +1,7 @@
-
-
 <?php
 // Démarrage de la session et inclusion des éléments nécessaires
 session_start();
-require_once 'includes/header.php';
-require_once 'includes/navbar.php';
+
 require_once 'includes/db.php';
 
 // Si l'utilisateur est déjà connecté, on le redirige vers son espace
@@ -47,6 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+require_once 'includes/header.php';
+require_once 'includes/navbar.php';
 ?>
 
 <div class="d-flex justify-content-around">

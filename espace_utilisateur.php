@@ -1,3 +1,46 @@
+<?php
+// Démarre la session et inclut les fichiers nécessaires (en-tête, navigation, base de données)
+session_start();
+require 'includes/db.php';
+
+// Redirige l'utilisateur vers la page de connexion s'il n'est pas authentifié
+if (!isset($_SESSION['user_id'])) {
+    header("Location: connexion.php");
+    exit();
+}
+
+// Récupère l'ID de l'utilisateur connecté depuis la session
+$user_id = $_SESSION['user_id'];
+
+// Récupère les infos de l'utilisateur
+// Requête pour obtenir les informations de l'utilisateur connecté
+$stmt = $pdo->prepare("SELECT pseudo, email, credits, role FROM utilisateurs WHERE id = ?");
+$stmt->execute([$user_id]);
+$user = $stmt->fetch();
+
+// Récupère les véhicules de l'utilisateur
+// Requête pour récupérer les véhicules liés à cet utilisateur
+$stmt2 = $pdo->prepare("SELECT * FROM vehicules WHERE utilisateur_id = ?");
+$stmt2->execute([$user_id]);
+$vehicules = $stmt2->fetchAll();
+?>
+
+<?php
+// Trajets auxquels l'utilisateur participe
+$stmt = $pdo->prepare("
+    SELECT t.*, u.pseudo AS conducteur
+    FROM participations p
+    JOIN trajets t ON p.covoiturage_id = t.id
+    JOIN utilisateurs u ON t.conducteur_id = u.id
+    WHERE p.utilisateur_id = ?
+");
+$stmt->execute([$user_id]);
+$trajets_participes = $stmt->fetchAll();
+
+require_once 'includes/header.php';
+require_once 'includes/navbar.php';
+?>
+
 <style>
     .user {
         background-color: #F7F6CF;
@@ -65,47 +108,7 @@
     }
 </style>
 
-<?php
-// Démarre la session et inclut les fichiers nécessaires (en-tête, navigation, base de données)
-session_start();
-require_once 'includes/header.php';
-require_once 'includes/navbar.php';
-require 'includes/db.php';
 
-// Redirige l'utilisateur vers la page de connexion s'il n'est pas authentifié
-if (!isset($_SESSION['user_id'])) {
-    header("Location: connexion.php");
-    exit();
-}
-
-// Récupère l'ID de l'utilisateur connecté depuis la session
-$user_id = $_SESSION['user_id'];
-
-// Récupère les infos de l'utilisateur
-// Requête pour obtenir les informations de l'utilisateur connecté
-$stmt = $pdo->prepare("SELECT pseudo, email, credits, role FROM utilisateurs WHERE id = ?");
-$stmt->execute([$user_id]);
-$user = $stmt->fetch();
-
-// Récupère les véhicules de l'utilisateur
-// Requête pour récupérer les véhicules liés à cet utilisateur
-$stmt2 = $pdo->prepare("SELECT * FROM vehicules WHERE utilisateur_id = ?");
-$stmt2->execute([$user_id]);
-$vehicules = $stmt2->fetchAll();
-?>
-
-<?php
-// Trajets auxquels l'utilisateur participe
-$stmt = $pdo->prepare("
-    SELECT t.*, u.pseudo AS conducteur
-    FROM participations p
-    JOIN trajets t ON p.covoiturage_id = t.id
-    JOIN utilisateurs u ON t.conducteur_id = u.id
-    WHERE p.utilisateur_id = ?
-");
-$stmt->execute([$user_id]);
-$trajets_participes = $stmt->fetchAll();
-?>
 
 
 <?php 

@@ -1,11 +1,3 @@
-<style>
-    main {
-        background-color: #F7F6CF !important;
-        font-family: EB Garamond !important;
-        font-size:1.2rem;
-    }
-
-</style>
 <?php
 // Démarrage de la session et inclusion des fichiers nécessaires
 session_start();
@@ -54,6 +46,15 @@ if (!$trajet) {
     exit;
 }
 ?>
+
+<style>
+    main {
+        background-color: #F7F6CF !important;
+        font-family: EB Garamond !important;
+        font-size:1.2rem;
+    }
+
+</style>
 
 <main class="container py-5">
     <h2>Détail du trajet avec <?= htmlspecialchars($trajet['chauffeur']) ?> 🚗</h2>

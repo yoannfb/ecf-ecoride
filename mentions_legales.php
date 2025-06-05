@@ -1,3 +1,9 @@
+<?php
+session_start();
+require_once 'includes/header.php';
+require_once 'includes/navbar.php';
+?>
+
 <style>
     .principal {
         background-color: #873e23;
@@ -10,15 +16,6 @@
     }
 
 </style>
-
-
-
-<?php
-session_start();
-require_once 'includes/header.php';
-require_once 'includes/navbar.php';
-?>
-
 <div class="principal">
     <div class="container pt-5 pb-2">
         <h1>Mentions légales</h1>
