@@ -1,5 +1,10 @@
 <?php include("includes/header.php"); ?>
-<body>
+
+<!-- Bibliothèque AOS (Animate On Scroll) -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+
+
   <?php include("includes/navbar.php"); 
   require_once 'includes/db.php';?>
 
@@ -46,11 +51,22 @@
         <button type="submit" class="btn btn-success">Rechercher</button>
       </div>
     </form>
+    <div id="resultats"></div>
 
   </section>
 
   <?php include("includes/footer.php"); ?>
   
-  <script src="js/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  // attendre que AOS soit chargé
+  if (typeof AOS !== "undefined") {
+    AOS.init();
+    console.log("✅ AOS initialisé !");
+  } else {
+    console.warn("⚠️ AOS n’est pas encore défini.");
+  }
+</script>
+<script src="js/index.js"></script>
 </body>
 </html>
