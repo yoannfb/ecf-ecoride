@@ -8,9 +8,9 @@ services:
     volumes:
       - .:/var/www/html
       - ./js:/var/www/html/js
-
     depends_on:
       - db
+      - mongo
 
   db:
     image: mysql:8
@@ -23,5 +23,15 @@ services:
       - db_data:/var/lib/mysql
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
 
+  mongo:
+    image: mongo:6
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
 volumes:
   db_data:
+  mongo-data:

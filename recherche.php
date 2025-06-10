@@ -1,6 +1,8 @@
 <?php
 require_once 'includes/db.php';
 
+
+
 $depart = $_GET['depart'] ?? '';
 $arrivee = $_GET['arrivee'] ?? '';
 $date = $_GET['date'] ?? '';
@@ -23,5 +25,5 @@ foreach ($results as $trajet) {
     echo "<a href='covoiturages.php?id={$trajet['id']}' class='btn btn-primary mt-2'>Voir le covoiturage</a>";
     echo "</div>";
 }
-
+include 'log_mongo.php';
 ?>
