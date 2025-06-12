@@ -1,7 +1,7 @@
 console.log("✅ index.js chargé !");
 
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("searchForm");
+  const form = document.getElementById("form-recherche");
   const resultatsDiv = document.getElementById("resultats");
 
   if (!form || !resultatsDiv) {
@@ -9,32 +9,45 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     console.log("🚀 Formulaire soumis !");
 
-    const depart = form.elements["depart"].value.trim();
-    const arrivee = form.elements["arrivee"].value.trim();
-    const date = form.elements["date"].value.trim();
+    const depart = document.getElementById("depart").value;
+    const arrivee = document.getElementById("arrivee").value;
+    const date = document.getElementById("date").value;
 
-    const params = new URLSearchParams({ depart, arrivee, date });
+    try {
+      const response = await fetch(
+        `recherche.php?ajax=1&depart=${encodeURIComponent(depart)}&arrivee=${encodeURIComponent(arrivee)}&date=${encodeURIComponent(date)}`
+      );
+      console.log("Données reçues :", data);
+      const data = await response.json();
+      resultatsDiv.innerHTML = "";
+      if (data.length === 0) {
+        resultatsDiv.innerHTML = "<p>Aucun covoiturage disponible.</p>";
+        return;
+      }
+      
 
-    fetch("recherche.php?" + params.toString())
-      .then((res) => res.text())
-      .then((html) => {
-        console.log("📦 Réponse reçue !");
-        if (html.trim() === "") {
-          resultatsDiv.innerHTML = `<div class="alert alert-warning">Aucun covoiturage trouvé.</div>`;
-        } else {
-          resultatsDiv.innerHTML = html;
-        }
-      })
-      .catch((err) => {
-        console.error("❌ Erreur FETCH :", err);
-        resultatsDiv.innerHTML = `<div class="alert alert-danger">Erreur lors de la recherche.</div>`;
+
+      data.forEach(trajet => {
+        const div = document.createElement("div");
+        div.classList.add("trajet");
+        div.innerHTML = `
+          <h4>${trajet.adresse_depart} → ${trajet.adresse_arrivee}</h4>
+          <p>Départ : ${trajet.date_depart}</p>
+          <p>Prix : ${trajet.prix} €</p>
+        `;
+        resultatsDiv.appendChild(div);
       });
-  });
-});
+      } catch (error) {
+        console.error("Erreur AJAX :", error);
+        resultatsDiv.innerHTML = "<p>Une erreur est survenue.</p>";
+      }
+    });
+  }
+);
 
 // animation voiture qui défilent 
 document.addEventListener('DOMContentLoaded', () => {

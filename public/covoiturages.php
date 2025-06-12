@@ -4,14 +4,11 @@
   }
 </style>
 
-
-
-
 <?php
 // Inclusion des éléments d'en-tête, barre de navigation et base de données
-require_once 'includes/header.php';
-require_once 'includes/navbar.php';
-require_once 'includes/db.php';
+require_once '../includes/header.php';
+require_once '../includes/navbar.php';
+require_once '../includes/db.php';
 
 // Récupération des champs du formulaire de recherche avec valeurs par défaut
 $depart = $_POST['depart'] ?? '';
@@ -112,5 +109,5 @@ $covoiturages = $stmt->fetchAll(); // Récupération de tous les trajets corresp
   <?php endif; // Inclusion des éléments d'en-tête, barre de navigation et base de données endif; ?>
 </main>
 
-<?php include("includes/footer.php"); // Inclusion du footer; ?>
+<?php include("../includes/footer.php"); // Inclusion du footer; ?>
 

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'includes/db.php';
+require_once '../includes/db.php';
 
 $user_id = $_SESSION['user_id'] ?? null;
 $covoiturage_id = $_GET['id'] ?? null;

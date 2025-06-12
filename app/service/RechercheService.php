@@ -18,7 +18,8 @@ class RechercheService {
 
     public function chercherTrajets($depart, $arrivee, $date) {
         // On récupère les trajets depuis MySQL
-        $results = $this->repository->findTrajets($depart, $arrivee, $date);
+        $results = $this->repo->trouverParLieu($depart, $arrivee, $date);
+
 
         // On loggue la recherche dans MongoDB
         $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';

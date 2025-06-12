@@ -1,16 +1,25 @@
 <?php
-// Active le chargement automatique de Composer (MongoDB, classes PHP…)
+session_start();
 require_once __DIR__ . '/../vendor/autoload.php';
-
-// Charge manuellement les classes de ton projet (si pas encore en PSR-4 dans le composer.json)
-// require_once __DIR__ . '/../app/Controller/RechercheController.php';
-// require_once __DIR__ . '/../app/Service/RechercheService.php';
-// require_once __DIR__ . '/../app/Repository/TrajetRepository.php';
-// require_once __DIR__ . '/../app/Repository/MongoLogger.php';
-
 
 use App\Controller\RechercheController;
 
-// Exécution du contrôleur
-$controller = new RechercheController();
-$controller->handleSearch();
+$isAjax = !empty($_GET['ajax']); // si ?ajax=1 dans l'URL → on veut du JSON
+
+if ($isAjax) {
+    header('Content-Type: application/json');
+    $controller = new RechercheController();
+    $controller->handleSearch();
+    exit;
+}
+
+// Sinon, page HTML classique avec formulaire
+
+?>
+
+<main class="container">
+    <h1>Résultats de votre recherche</h1>
+    <div id="resultats"></div>
+</main>
+
+<script src="js/index.js" defer></script>
