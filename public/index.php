@@ -1,12 +1,15 @@
-<?php include("includes/header.php"); ?>
+<?php require_once __DIR__ . '/../includes/header.php'; // ✅ sûr
+?>
 
 <!-- Bibliothèque AOS (Animate On Scroll) -->
 <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
 
 
-  <?php include("includes/navbar.php"); 
-  require_once 'includes/db.php';?>
+  <?php require_once __DIR__ . '/../includes/navbar.php';
+; 
+  require_once __DIR__ . '/../includes/db.php';
+  ;?>
 
   
 
@@ -55,7 +58,7 @@
 
   </section>
 
-  <?php include("includes/footer.php"); ?>
+  <?php require_once __DIR__ . '/../includes/footer.php';?>
   
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script>
