@@ -16,10 +16,16 @@ if ($isAjax) {
 // Sinon, page HTML classique avec formulaire
 
 ?>
-
+<!-- 
 <main class="container">
     <h1>Résultats de votre recherche</h1>
-    <div id="resultats"></div>
-</main>
+    <form id="form-recherche" method="GET" action="recherche.php" style="margin-top: 1rem;">
+        <input type="text" name="depart" id="depart" placeholder="Ville de départ" required>
+        <input type="text" name="arrivee" id="arrivee" placeholder="Ville d’arrivée" required>
+        <input type="date" name="date" id="date">
+        <button type="submit">Rechercher</button>
+    </form>
+    <div id="recherche-resultats"></div>
+</main>-->
 
 <script src="js/index.js" defer></script>

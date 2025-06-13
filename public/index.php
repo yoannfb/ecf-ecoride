@@ -40,21 +40,21 @@
   </section>
   <section class="py-4 px-2 section-content">
     <h3>Rechercher un itinéraire</h3>
-    <form id="searchForm" class="row g-3">
+    <form id="form-recherche" method="GET" action="recherche.php" class="row g-3">
       <div class="col-md-4">
-        <input type="text" name="depart" placeholder="Ville de départ" class="form-control">
+        <input type="text" name="depart" id="depart" placeholder="Ville de départ" class="form-control" required>
       </div>
       <div class="col-md-4">
-        <input type="text" name="arrivee" placeholder="Ville d’arrivée" class="form-control">
+        <input type="text" name="arrivee" id="arrivee" placeholder="Ville d’arrivée" class="form-control" required>
       </div>
       <div class="col-md-4">
-        <input type="date" name="date" class="form-control">
+        <input type="date" name="date" id="date" class="form-control">
       </div>
       <div class="text-end">
         <button type="submit" class="btn btn-success">Rechercher</button>
       </div>
     </form>
-    <div id="resultats"></div>
+    <div id="recherche-resultats"></div>
 
   </section>
 

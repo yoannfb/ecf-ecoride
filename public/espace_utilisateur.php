@@ -1,7 +1,7 @@
 <?php
 // Démarre la session et inclut les fichiers nécessaires (en-tête, navigation, base de données)
 session_start();
-require 'includes/db.php';
+require '../includes/db.php';
 
 // Redirige l'utilisateur vers la page de connexion s'il n'est pas authentifié
 if (!isset($_SESSION['user_id'])) {
@@ -37,8 +37,8 @@ $stmt = $pdo->prepare("
 $stmt->execute([$user_id]);
 $trajets_participes = $stmt->fetchAll();
 
-require_once 'includes/header.php';
-require_once 'includes/navbar.php';
+require_once '../includes/header.php';
+require_once '../includes/navbar.php';
 ?>
 
 <style>
