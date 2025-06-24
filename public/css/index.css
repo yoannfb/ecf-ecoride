@@ -1,0 +1,79 @@
+/* section animation voiture */
+.slider-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background-color:white;
+}
+
+.slider-img-loop {
+    position: absolute;
+    top: 50%;
+    left: -200px;
+    transform: translateY(-50%);
+    width: 10%;
+    animation: glisseInfini 8s linear infinite;
+}
+
+@keyframes glisseInfini {
+    0% { left: -200px; }
+    100% { left: calc(100% + 200px); }
+}
+
+  /* Délais différents pour créer un effet naturel */
+.delay-0 {
+    animation-delay: 0s;
+}
+
+.delay-1 {
+    animation-delay: 2.5s;
+}
+
+.delay-2 {
+    animation-delay: 5s;
+}
+.animation{
+    background-color: #F7F6CF;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1.2rem;
+}
+
+
+/* section parallax */
+.parallax-section{
+    position: relative;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 500px;
+}
+.overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.section-content{
+    padding: 100px 0;
+    background-color:#F7F6CF;
+    font-family: 'Times New Roman', Times, serif;
+
+}
+#parallax1{
+    background-image: url(../assets/parallax.jpg);
+}
+
+/*header*/
+.header {
+    background: linear-gradient(34deg,rgba(247, 246, 207, 1) 20%, rgba(40, 167, 69, 1) 52%);
+    font-family: EB Garamond;
+    font-size: 1.5rem;
+    
+}
+.header p,h1{
+    color: black;
+}
+

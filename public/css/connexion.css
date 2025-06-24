@@ -1,0 +1,22 @@
+
+.covoit {
+    background-color: #F7F6CF !important;
+    font-family: EB Garamond !important;
+    font-size: 1.5rem;
+}
+
+
+
+.car {
+    width: 50%;
+    background-color: #F7F6CF !important;
+}
+
+.car img {
+    width: 100%;
+    height: auto;
+    border-radius: 40%;
+    margin-bottom: 10%;
+
+}
+
