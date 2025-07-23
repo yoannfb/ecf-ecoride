@@ -9,8 +9,8 @@ class UserRepository {
 
     public function __construct() {
         // Connexion PDO à adapter selon ta config
-        $host = 'localhost';
-        $dbname = 'nom_de_ta_bdd';
+        $host = 'db';
+        $dbname = 'db';
         $username = 'root';
         $password = '';
 
