@@ -8,18 +8,12 @@ class UserRepository {
     private $db;
 
     public function __construct() {
-<<<<<<< HEAD
         // Connexion PDO à adapter selon ta config
         $host = 'db';
         $dbname = 'db';
         $username = 'root';
         $password = '';
-=======
-    // Utilise la connexion centralisée (Docker)
-    require_once __DIR__ . '/../../includes/db.php'; // définit $pdo (host=db, EcoRide, ecoride_user)
-    $this->db = $pdo;
-}
->>>>>>> 05eb1de (maj ensemble du projet)
+    }
 
 
     public function trouverParEmail($email) {
