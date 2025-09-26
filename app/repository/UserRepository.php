@@ -8,19 +8,19 @@ class UserRepository {
     private $db;
 
     public function __construct() {
+<<<<<<< HEAD
         // Connexion PDO à adapter selon ta config
         $host = 'db';
         $dbname = 'db';
         $username = 'root';
         $password = '';
+=======
+    // Utilise la connexion centralisée (Docker)
+    require_once __DIR__ . '/../../includes/db.php'; // définit $pdo (host=db, EcoRide, ecoride_user)
+    $this->db = $pdo;
+}
+>>>>>>> 05eb1de (maj ensemble du projet)
 
-        try {
-            $this->db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-            $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            die('Erreur de connexion : ' . $e->getMessage());
-        }
-    }
 
     public function trouverParEmail($email) {
         $sql = "SELECT * FROM utilisateurs WHERE email = :email LIMIT 1";

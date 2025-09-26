@@ -7,7 +7,7 @@ use App\Controller\UtilisateurController;
 // Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
-    $motDePasse = $_POST['mot_de_passe'] ?? '';
+    $motDePasse = $_POST['password'] ?? '';
 
     $controller = new UtilisateurController();
     $controller->login($email, $motDePasse);

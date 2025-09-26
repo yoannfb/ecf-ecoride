@@ -11,14 +11,19 @@ class UtilisateurController {
     }
 
     public function login($email, $motDePasse) {
-        if ($this->service->verifierConnexion($email, $motDePasse)) {
-            $_SESSION['email'] = $email;
-            header("Location: espace_utilisateur.php");
-            exit;
-        } else {
-            echo "Identifiants invalides";
+    if ($this->service->verifierConnexion($email, $motDePasse)) {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
         }
+        $_SESSION['email'] = $email;
+        header('Location: /espace_utilisateur.php');
+        exit;
     }
+    // Échec
+    header('Location: /connexion.php?err=1');
+    exit;
+}
+
 
     public function register($email, $motDePasse) {
         if ($this->service->inscrireUtilisateur($email, $motDePasse)) {
