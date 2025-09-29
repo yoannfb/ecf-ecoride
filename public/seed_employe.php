@@ -10,7 +10,6 @@ $sql = "INSERT INTO utilisateurs (pseudo, email, mot_de_passe, role, credits)
         ON DUPLICATE KEY UPDATE mot_de_passe = VALUES(mot_de_passe), role = VALUES(role)";
 $ok = $pdo->prepare($sql)->execute(['email'=>$email,'hash'=>$hash]);
 
-$r = $pdo->query("SELECT id, email, role, LENGTH(mot_de_passe) len FROM utilisateurs WHERE email = ".$pdo->quote($email))->fetch();
 header('Content-Type: text/plain; charset=utf-8');
-echo "upsert: ".($ok?'OK':'KO').PHP_EOL;
-var_dump($r);
+echo $ok ? "upsert OK\n" : "upsert KO\n";
+
