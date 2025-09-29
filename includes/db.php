@@ -40,3 +40,4 @@ if (!isset($pdo) || !($pdo instanceof PDO)) {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
 }
+
