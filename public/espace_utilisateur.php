@@ -5,7 +5,7 @@ require '../includes/db.php';
 
 // Redirige l'utilisateur vers la page de connexion s'il n'est pas authentifié
 if (!isset($_SESSION['user_id'])) {
-    header("Location: connexion.php");
+    header("Location: /connexion.php");
     exit();
 }
 
