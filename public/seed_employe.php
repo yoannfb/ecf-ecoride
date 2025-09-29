@@ -3,7 +3,7 @@ require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/../includes/db.php';
 
 $email = 'employe@ecoride.fr';
-$hash  = '$2y$10$YcM7k8hQq2zq3dX4Xb/7yuRX0dI6Jk7cQWk0m4hB3X2b0G7bq6n2W'; // = Employe123!
+$hash  = '$2y$10$aTT1Yfnu8RLEYGr0mh5yWuYDulHkcfLeFeyFZvskmd2nDQpwBSGhK'; // = Employe123
 
 $sql = "INSERT INTO utilisateurs (pseudo, email, mot_de_passe, role, credits)
         VALUES ('employe', :email, :hash, 'employe', 100)
