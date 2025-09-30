@@ -18,6 +18,8 @@ class UtilisateurController
         if ($this->service->verifierConnexion($email, $motDePasse)) {
             if (session_status() !== PHP_SESSION_ACTIVE) {
                 session_start();
+                error_log('LOGIN OK id='.($_SESSION['user_id']??'').' role='.($_SESSION['role']??''));
+
             }
 
             // 🔽 Récupère l'utilisateur pour obtenir son id

@@ -5,6 +5,8 @@ require __DIR__ . '/../vendor/autoload.php';
 use App\Service\EmployeService;
 
 if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+error_log('EMPLOYE id='.($_SESSION['user_id']??'').' role='.($_SESSION['role']??''));
+
 $role = $_SESSION['role'] ?? 'user';
 if (empty($_SESSION['user_id']) || !in_array($role, ['employe','admin'], true)) {
     header('Location: /connexion.php?err=auth'); exit;
