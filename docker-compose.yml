@@ -7,7 +7,7 @@ services:
       - "8080:80"
     volumes:
       - .:/var/www/html
-      - ./js:/var/www/html/js
+      - ./docker/vhost.conf:/etc/apache2/sites-available/000-default.conf
     depends_on:
       - db
       - mongo
@@ -43,6 +43,7 @@ services:
       PMA_PASSWORD: ecoride_pass
     depends_on:
       - db
+
 volumes:
   db_data:
   mongo-data:

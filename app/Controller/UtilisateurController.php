@@ -29,7 +29,8 @@ class UtilisateurController
             // 🔽 Alimente la session avec ce que l'espace utilisateur attend
             $_SESSION['user_id'] = $user['id'] ?? null;
             $_SESSION['email']   = $user['email'] ?? $email;
-            $_SESSION['role']    = $user['role'] ?? 'user';
+            $_SESSION['role']    = strtolower(trim($user['role'] ?? 'user'));
+            //$_SESSION['role']    = $user['role'] ?? 'user';
 
             // Sécurité: si pour une raison quelconque l'id manque, retourne au login
             if (empty($_SESSION['user_id'])) {
