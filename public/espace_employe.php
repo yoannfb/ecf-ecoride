@@ -38,10 +38,13 @@ switch ($action) {
         $incidents = $service->listerIncidents();
         break;
 }
+
+require_once '../includes/header.php';
+require_once '../includes/navbar.php';
 ?>
 
 <style>
-    .wrap {
+    .user {
         background-color: #F7F6CF;
         font-family: EB Garamond;
     }
@@ -50,7 +53,7 @@ switch ($action) {
         margin: 0 auto ;
         padding: 0 20px 0;
     }
-        h1 {
+    h1 {
         text-transform: uppercase;
         color: black;
         font-weight: 900;
@@ -104,9 +107,13 @@ switch ($action) {
 
 </style>
 
-<div class="wrap p-5">
+<div class="user p-5">
     <div class="container">
-        <h1>Espace employé</h1>
+        <h1>
+            <span>
+                Espace employé
+            </span>
+        </h1>
     </div>
 <?php if (!empty($_GET['ok'])): ?><p class="ok">Action effectuée.</p><?php endif; ?>
 
@@ -168,5 +175,5 @@ switch ($action) {
 <?php endif; ?>
 </div>
 
-
+<?php require_once '../includes/footer.php'; // Inclusion du footer; ?>
 
