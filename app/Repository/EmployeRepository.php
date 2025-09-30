@@ -11,18 +11,20 @@ class EmployeRepository
     }
 
     // ---------- AVIS ----------
+    // app/Repository/EmployeRepository.php
     public function getAvisEnAttente(): array
     {
+    // Sélection minimale, compatible avec tous les schémas
         $sql = "SELECT a.id, a.note, a.commentaire, a.statut,
-                       t.id AS trajet_id, t.depart_ville, t.arrivee_ville, t.date_depart, t.date_arrivee,
-                       u.pseudo AS auteur_pseudo, u.email AS auteur_email
-                  FROM avis a
-                  JOIN trajets t      ON t.id = a.trajet_id
-                  JOIN utilisateurs u ON u.id = a.auteur_id
-                 WHERE a.statut = 'en attente'
-                 ORDER BY a.id DESC";
+                    a.trajet_id,
+                    u.pseudo AS auteur_pseudo, u.email AS auteur_email
+                FROM avis a
+                LEFT JOIN utilisateurs u ON u.id = a.auteur_id
+            WHERE a.statut = 'en attente'
+            ORDER BY a.id DESC";
         return $this->db->query($sql)->fetchAll();
     }
+
 
     public function validerAvis(int $id): bool
     {
