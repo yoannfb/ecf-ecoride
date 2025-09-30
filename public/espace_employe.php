@@ -173,6 +173,11 @@ require_once '../includes/navbar.php';
   <?php endforeach; ?>
   </tbody></table>
 <?php endif; ?>
+
+    <div class="mt-4 p-2">
+        <a href="index.php" class="btn btn-outline-secondary">Retour à l'accueil</a>
+        <a href="logout.php" class="btn btn-outline-danger">Se déconnecter</a>
+    </div>
 </div>
 
 <?php require_once '../includes/footer.php'; // Inclusion du footer; ?>
