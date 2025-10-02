@@ -42,7 +42,7 @@ class UtilisateurController
             if ($user['role'] === 'employe') {
                 header('Location: /espace_employe.php');
             } elseif ($user['role'] === 'admin') {
-                header('Location: /espace_admin.php'); // si tu prévois un espace admin
+                header('Location: /espace_admin.php'); 
             } else {
                 header('Location: /espace_utilisateur.php');
             }

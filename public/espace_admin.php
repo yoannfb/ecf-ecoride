@@ -5,6 +5,8 @@ require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/../includes/db.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+error_log('ADMIN PAGE id=' . ($_SESSION['user_id'] ?? 'null') . ' role=' . ($_SESSION['role'] ?? 'null'));
+
 
 // --- Garde d'accès : admin only ---
 $role = strtolower(trim($_SESSION['role'] ?? ''));
